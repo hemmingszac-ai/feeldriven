@@ -1,6 +1,15 @@
 import { redirect } from 'next/navigation'
 import { signout } from '../auth/actions'
 import { createClient } from '../lib/supabase/server'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -13,14 +22,25 @@ export default async function DashboardPage() {
   }
 
   return (
-    <main>
-      <section>
-        <h1>Dashboard</h1>
-        <p>You are signed in as {user.email}.</p>
+    <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center px-4 py-12">
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-3xl">Dashboard</CardTitle>
+          <CardDescription>You are signed in as {user.email}.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Your FieldDriven workspace is ready for the next product workflow.
+          </p>
+        </CardContent>
+        <CardFooter>
         <form>
-          <button formAction={signout}>Sign out</button>
+            <Button formAction={signout} type="submit" variant="outline">
+              Sign out
+            </Button>
         </form>
-      </section>
+        </CardFooter>
+      </Card>
     </main>
   )
 }

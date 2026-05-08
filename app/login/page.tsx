@@ -1,4 +1,15 @@
 import { login, signup } from '../auth/login'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 type LoginPageProps = {
   searchParams?: {
@@ -9,41 +20,60 @@ type LoginPageProps = {
 
 export default function LoginPage({ searchParams }: LoginPageProps) {
   return (
-    <main>
-      <section>
-        <h1>Log in</h1>
-        <p>Use your email and password to access FieldDriven.</p>
+    <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-4 py-12">
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-2xl">Log in</CardTitle>
+          <CardDescription>
+            Use your email and password to access FieldDriven.
+          </CardDescription>
+        </CardHeader>
 
-        {searchParams?.error ? (
-          <p className="alert">{searchParams.error}</p>
-        ) : null}
-        {searchParams?.message ? (
-          <p className="notice">{searchParams.message}</p>
-        ) : null}
+        <CardContent>
+          <div className="grid gap-3">
+            {searchParams?.error ? (
+              <Alert variant="destructive">
+                <AlertDescription>{searchParams.error}</AlertDescription>
+              </Alert>
+            ) : null}
+            {searchParams?.message ? (
+              <Alert>
+                <AlertDescription>{searchParams.message}</AlertDescription>
+              </Alert>
+            ) : null}
 
-        <form className="auth-form">
-          <label>
-            Email
-            <input name="email" type="email" autoComplete="email" required />
-          </label>
-          <label>
-            Password
-            <input
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              minLength={6}
-              required
-            />
-          </label>
-          <div className="button-row">
-            <button formAction={login}>Log in</button>
-            <button formAction={signup} type="submit" className="secondary">
-              Sign up
-            </button>
+            <form className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  minLength={6}
+                  required
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button formAction={login} type="submit">Log in</Button>
+                <Button formAction={signup} type="submit" variant="secondary">
+                  Sign up
+                </Button>
+              </div>
+            </form>
           </div>
-        </form>
-      </section>
+        </CardContent>
+      </Card>
     </main>
   )
 }
