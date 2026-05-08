@@ -56,6 +56,20 @@ textarea {
   font: inherit;
 }
 
+input {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  padding: 0.85rem 1rem;
+  font: inherit;
+}
+
+label {
+  display: grid;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+
 button {
   border: 0;
   border-radius: 14px;
@@ -71,6 +85,23 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.auth-form {
+  display: grid;
+  gap: 1rem;
+  max-width: 28rem;
+  margin-top: 2rem;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.secondary {
+  background: #111827;
+}
+
 .output {
   margin-top: 1.5rem;
   white-space: pre-wrap;
@@ -83,6 +114,11 @@ button:disabled {
 .alert {
   margin-top: 1rem;
   color: #b91c1c;
+}
+
+.notice {
+  margin-top: 1rem;
+  color: #047857;
 }
 
 footer {
