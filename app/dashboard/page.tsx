@@ -22,6 +22,7 @@ export default async function DashboardPage() {
   }
 
   const { data: profile, error: profileError } = await supabase
+    .schema('dbo')
     .from('profiles')
     .select('first_name, last_name')
     .eq('id', user.id)

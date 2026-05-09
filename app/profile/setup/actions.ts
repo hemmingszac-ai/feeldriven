@@ -57,19 +57,22 @@ export async function createProfile(formData: FormData) {
     fail('Please describe the kind of projects that would stretch you.')
   }
 
-  const { error: profileError } = await supabase.from('profiles').upsert(
-    {
-      id: user.id,
-      first_name: firstName,
-      last_name: lastName,
-      skills_to_develop: skillsToDevelop,
-      enjoyable_work: enjoyableWork,
-      stretch_projects: stretchProjects,
-    },
-    {
-      onConflict: 'id',
-    }
-  )
+  const { error: profileError } = await supabase
+    .schema('dbo')
+    .from('profiles')
+    .upsert(
+      {
+        id: user.id,
+        first_name: firstName,
+        last_name: lastName,
+        skills_to_develop: skillsToDevelop,
+        enjoyable_work: enjoyableWork,
+        stretch_projects: stretchProjects,
+      },
+      {
+        onConflict: 'id',
+      }
+    )
 
   if (profileError) {
     fail(profileError.message)
