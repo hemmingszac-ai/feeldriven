@@ -1,7 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { createClient } from '../lib/supabase/server'
+import { createClient } from '@/app/lib/supabase/server'
 import { validateShoutOutInput } from './validation'
 
 function fail(message: string): never {
