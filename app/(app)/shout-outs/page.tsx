@@ -1,4 +1,3 @@
-import { Megaphone } from 'lucide-react'
 import { formatProfileName } from '@/app/lib/profiles'
 import { createShoutOut } from './actions'
 import { normalizeShoutOuts, type ShoutOutWithProfiles } from './feed'
@@ -18,6 +17,13 @@ import {
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { Megaphone } from 'lucide-react'
 
 type ShoutOutsPageProps = {
   searchParams?: {
@@ -106,9 +112,20 @@ export default async function ShoutOutsPage({
         </div>
       </section>
 
-      <Card className="shrink-0" size="sm">
-        <CardHeader className="gap-0.5">
-          <CardTitle>Recognize a teammate</CardTitle>
+      <Card className="mt-2 shrink-0 overflow-hidden border-primary/20 pt-0 shadow-md shadow-primary/10">
+        <CardHeader className="gap-1 border-b border-border/70 bg-linear-to-r from-primary/10 via-accent/35 to-transparent !py-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger className="w-fit rounded-md text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+                <CardTitle className="text-lg font-semibold tracking-tight">
+                  Recognize a teammate
+                </CardTitle>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="start" className="max-w-72">
+                Highlight a teammate's impact.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </CardHeader>
         <CardContent>
           <form action={createShoutOut} className="grid gap-3">
