@@ -19,12 +19,14 @@ export type ReceivedShoutOut = {
 type ReceivedShoutOutsProps = {
   shoutOuts: ReceivedShoutOut[]
   emptyMessage: string
+  recipientId: string
   recipientName: string
 }
 
 export function ReceivedShoutOuts({
   shoutOuts,
   emptyMessage,
+  recipientId,
   recipientName,
 }: ReceivedShoutOutsProps) {
   return (
@@ -49,7 +51,9 @@ export function ReceivedShoutOuts({
               return (
                 <ShoutOutCard
                   key={shoutOut.id}
+                  recipientId={recipientId}
                   recipient={recipientName}
+                  senderId={sender?.id}
                   sender={senderName}
                   message={shoutOut.message}
                   createdAt={shoutOut.created_at}

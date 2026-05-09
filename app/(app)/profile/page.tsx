@@ -100,6 +100,7 @@ export default async function ProfilePage() {
       <ReceivedShoutOuts
         shoutOuts={shoutOuts as ReceivedShoutOut[]}
         emptyMessage="No shout-outs yet. Recognition from teammates will appear here."
+        recipientId={profile.id}
         recipientName={userName}
       />
     </div>

@@ -123,6 +123,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
       <ReceivedShoutOuts
         shoutOuts={shoutOuts as ReceivedShoutOut[]}
         emptyMessage="No shout-outs yet for this organization member."
+        recipientId={profile.id}
         recipientName={profileName}
       />
     </div>

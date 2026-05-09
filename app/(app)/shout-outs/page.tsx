@@ -90,7 +90,9 @@ export default async function ShoutOutsPage({
               return (
                 <ShoutOutCard
                   key={shoutOut.id}
+                  recipientId={shoutOut.recipient?.id}
                   recipient={recipient}
+                  senderId={shoutOut.sender?.id}
                   sender={sender}
                   message={shoutOut.message}
                   createdAt={shoutOut.created_at}

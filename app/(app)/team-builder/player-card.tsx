@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { GripVertical, Plus, X } from 'lucide-react'
 import type { TeamBuilderProfile } from './types'
 import { Button } from '@/components/ui/button'
@@ -24,6 +25,7 @@ export function PlayerCard({
   onDragStart,
 }: PlayerCardProps) {
   const topTags = [...profile.enjoyableWork, ...profile.skillsToDevelop].slice(0, 2)
+  const profileHref = `/organization/${profile.id}`
 
   return (
     <article
@@ -47,7 +49,14 @@ export function PlayerCard({
       <div className="grid h-full gap-2.5 pt-5">
         <div>
           <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Player</p>
-          <h3 className="truncate text-base font-semibold">{profile.name}</h3>
+          <h3 className="truncate text-base font-semibold">
+            <Link
+              href={profileHref}
+              className="truncate font-semibold text-primary underline-offset-4 transition hover:underline"
+            >
+              {profile.name}
+            </Link>
+          </h3>
           <p className="truncate text-xs text-muted-foreground">
             {profile.email ?? 'No work email on profile'}
           </p>
