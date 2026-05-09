@@ -41,7 +41,7 @@ export default async function ProfileSetupPage({
       <Card className="w-full">
         <CardHeader>
           <CardDescription>
-            Tell FeelDriven how you work so the workspace can personalize your
+            Tell us how you work so the workspace can personalize your
             next steps.
           </CardDescription>
         </CardHeader>

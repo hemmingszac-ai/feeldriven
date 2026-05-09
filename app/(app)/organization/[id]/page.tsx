@@ -61,7 +61,6 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
   return (
     <div className="grid gap-6">
       <ProfileHero
-        eyebrow="Organization member"
         name={profileName}
         initials={getProfileInitials(profile)}
         action={
