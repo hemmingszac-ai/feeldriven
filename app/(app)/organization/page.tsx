@@ -11,24 +11,14 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { ProfileListCard } from '@/components/profile-view'
 
 type OrganizationPageProps = {
   searchParams?: {
     q?: string
   }
-}
-
-function Initials({ profile }: { profile: OrganizationProfile }) {
-  return (
-    <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
-      {getProfileInitials(profile)}
-    </div>
-  )
 }
 
 export default async function OrganizationPage({ searchParams }: OrganizationPageProps) {
@@ -88,17 +78,12 @@ export default async function OrganizationPage({ searchParams }: OrganizationPag
       ) : (
         <section className="grid gap-3" aria-label="Organization members">
           {filteredProfiles.map((profile) => (
-            <Card key={profile.id}>
-              <CardHeader className="flex flex-row items-center gap-3 space-y-0">
-                <Initials profile={profile} />
-                <div className="min-w-0 flex-1">
-                  <CardTitle className="truncate text-lg">
-                    {getOrganizationProfileName(profile)}
-                  </CardTitle>
-                  <CardDescription>
-                    {profile.skills_to_develop.length} skills to develop
-                  </CardDescription>
-                </div>
+            <ProfileListCard
+              key={profile.id}
+              initials={getProfileInitials(profile)}
+              title={getOrganizationProfileName(profile)}
+              description={`${profile.skills_to_develop.length} skills to develop`}
+              action={
                 <Link
                   href={`/organization/${profile.id}`}
                   className={buttonVariants({ variant: 'outline', size: 'sm' })}
@@ -106,8 +91,8 @@ export default async function OrganizationPage({ searchParams }: OrganizationPag
                   <UserRound className="size-4" />
                   View profile
                 </Link>
-              </CardHeader>
-            </Card>
+              }
+            />
           ))}
         </section>
       )}

@@ -1,18 +1,20 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, Sparkles, Target } from 'lucide-react'
+import { ArrowLeft, Brain, Sparkles } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
 import { getProfileInitials } from '@/app/lib/profiles'
 import { getOrganizationProfileName, type OrganizationProfile } from '../search'
-import { buttonVariants } from '@/components/ui/button'
-import { PillList } from '@/components/pill-list'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  ReceivedShoutOuts,
+  type ReceivedShoutOut,
+} from '../../shout-outs/received-shout-outs'
+import { buttonVariants } from '@/components/ui/button'
+import {
+  ProfileDetailsGrid,
+  ProfileGrowthCard,
+  ProfileHero,
+  ProfileMetricsGrid,
+} from '@/components/profile-view'
 
 type OrganizationMemberPageProps = {
   params: {
@@ -23,102 +25,106 @@ type OrganizationMemberPageProps = {
 export default async function OrganizationMemberPage({ params }: OrganizationMemberPageProps) {
   const { supabase } = await getCurrentUserProfile()
 
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select(
-      'id, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects'
-    )
-    .eq('id', params.id)
-    .maybeSingle<OrganizationProfile>()
+  const [
+    { data: profile, error: profileError },
+    { data: shoutOuts = [] },
+  ] = await Promise.all([
+    supabase
+      .from('profiles')
+      .select(
+        'id, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects'
+      )
+      .eq('id', params.id)
+      .maybeSingle<OrganizationProfile>(),
+    supabase
+      .from('shout_outs')
+      .select(
+        `
+        id,
+        message,
+        created_at,
+        sender:profiles!shout_outs_sender_id_fkey(id, first_name, last_name)
+      `
+      )
+      .eq('recipient_id', params.id)
+      .order('created_at', { ascending: false }),
+  ])
 
   if (profileError || !profile) {
     notFound()
   }
 
   const profileName = getOrganizationProfileName(profile)
+  const skillCount = profile.skills_to_develop.length
+  const workModeCount = profile.enjoyable_work.length
 
   return (
     <div className="grid gap-6">
-      <div>
-        <Link
-          href="/organization"
-          className={buttonVariants({ variant: 'outline', size: 'sm' })}
-        >
-          <ArrowLeft className="size-4" />
-          Back to organization
-        </Link>
-      </div>
+      <ProfileHero
+        eyebrow="Organization member"
+        name={profileName}
+        initials={getProfileInitials(profile)}
+        action={
+          <Link
+            href="/organization"
+            className={buttonVariants({ variant: 'outline', size: 'sm' })}
+          >
+            <ArrowLeft className="size-4" />
+            Back to organization
+          </Link>
+        }
+      />
 
-      <section className="rounded-xl border bg-card p-5 text-card-foreground shadow-sm">
-        <div className="flex min-w-0 items-center gap-4">
-          <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-semibold text-primary-foreground">
-            {getProfileInitials(profile)}
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-2xl font-semibold tracking-normal">
-              {profileName}
-            </p>
-          </div>
-        </div>
-      </section>
+      <ProfileMetricsGrid
+        metrics={[
+          {
+            icon: Brain,
+            title: 'Skills',
+            description: 'Development signals captured.',
+            value: skillCount,
+          },
+          {
+            icon: Sparkles,
+            title: 'Work modes',
+            description: 'Preferred contribution styles.',
+            value: workModeCount,
+          },
+        ]}
+      />
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_1fr]">
-        <Card>
-          <CardHeader>
-            <CardTitle>Skills to develop</CardTitle>
-            <CardDescription>
-              Growth areas this organization member has identified.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <PillList items={profile.skills_to_develop} emptyMessage="Nothing recorded yet." />
-          </CardContent>
-        </Card>
+      <ProfileDetailsGrid
+        sections={[
+          {
+            title: 'Skills to develop',
+            description:
+              'Growth areas this organization member has identified.',
+            items: profile.skills_to_develop,
+            emptyMessage: 'Nothing recorded yet.',
+          },
+          {
+            title: 'Work they enjoy most',
+            description:
+              'Work patterns that keep contribution energizing.',
+            items: profile.enjoyable_work,
+            emptyMessage: 'Nothing recorded yet.',
+          },
+        ]}
+      />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Work they enjoy most</CardTitle>
-            <CardDescription>
-              Work patterns that keep contribution energizing.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <PillList items={profile.enjoyable_work} emptyMessage="Nothing recorded yet." />
-          </CardContent>
-        </Card>
-      </div>
+      <ProfileGrowthCard
+        title="Growth direction"
+        description="Projects that should stretch this organization member in a good way."
+      >
+        <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+          {profile.stretch_projects}
+        </p>
+      </ProfileGrowthCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-xl">
-            <Target className="size-5" />
-            Growth direction
-          </CardTitle>
-          <CardDescription>
-            Projects that should stretch this organization member in a good way.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
-            {profile.stretch_projects}
-          </p>
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Sparkles className="size-4" />
-              Work modes
-            </CardTitle>
-            <CardDescription>Preferred contribution styles.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <PillList items={profile.enjoyable_work} emptyMessage="Nothing recorded yet." />
-          </CardContent>
-        </Card>
-      </div>
+      <ReceivedShoutOuts
+        shoutOuts={shoutOuts as ReceivedShoutOut[]}
+        emptyMessage="No shout-outs yet for this organization member."
+        recipientName={profileName}
+      />
     </div>
   )
 }

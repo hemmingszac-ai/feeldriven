@@ -2,6 +2,10 @@ import { Megaphone } from 'lucide-react'
 import { formatProfileName } from '@/app/lib/profiles'
 import { createShoutOut } from './actions'
 import { normalizeShoutOuts, type ShoutOutWithProfiles } from './feed'
+import {
+  ShoutOutCard,
+  getShoutOutCardClassName,
+} from './shout-out-card'
 import { SHOUT_OUT_MAX_MESSAGE_LENGTH } from './validation'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -25,25 +29,6 @@ type Profile = {
   id: string
   first_name: string
   last_name: string
-}
-
-function formatTimestamp(value: string) {
-  return new Intl.DateTimeFormat('en', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(value))
-}
-
-function getPosterClassName(message: string) {
-  if (message.length > 220) {
-    return 'min-h-72'
-  }
-
-  if (message.length > 120) {
-    return 'min-h-56'
-  }
-
-  return 'min-h-44'
 }
 
 export default async function ShoutOutsPage({
@@ -103,37 +88,16 @@ export default async function ShoutOutsPage({
               const recipient = formatProfileName(shoutOut.recipient)
 
               return (
-                <Card
+                <ShoutOutCard
                   key={shoutOut.id}
-                  className={`mb-3 inline-block w-full max-w-none break-inside-avoid ${getPosterClassName(
+                  recipient={recipient}
+                  sender={sender}
+                  message={shoutOut.message}
+                  createdAt={shoutOut.created_at}
+                  className={`mb-3 inline-block w-full max-w-none break-inside-avoid ${getShoutOutCardClassName(
                     shoutOut.message
                   )}`}
-                >
-                  <CardHeader className="gap-0.5">
-                    <div className="flex items-start justify-between gap-3">
-                      <CardTitle>{recipient}</CardTitle>
-                      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-primary/10">
-                        <Megaphone className="size-4" />
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="flex flex-1 flex-col gap-4 text-sm">
-                    <div className="flex h-full flex-col">
-                      <div className="flex flex-1 flex-col justify-center py-5">
-                        <p className="text-balance text-xl font-semibold leading-snug">
-                          "{shoutOut.message}"
-                        </p>
-                      </div>
-
-                      <div className="border-t pt-3 text-sm">
-                        <p className="font-medium">Recognized by {sender}</p>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          {formatTimestamp(shoutOut.created_at)}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                />
               )
             })
           )}
