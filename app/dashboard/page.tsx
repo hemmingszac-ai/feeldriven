@@ -37,15 +37,6 @@ export default async function DashboardPage() {
       userName={`${profile.first_name} ${profile.last_name}`}
     >
       <div className="grid gap-6">
-        <div>
-          <p className="text-sm font-medium text-muted-foreground">
-            Welcome back, {profile.first_name}
-          </p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-normal">
-            Dashboard
-          </h1>
-        </div>
-
         <div className="grid gap-4 md:grid-cols-3">
           <Card className="border-t-4 border-t-primary">
             <CardHeader>

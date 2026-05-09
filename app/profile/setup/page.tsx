@@ -6,7 +6,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
 
 type ProfileSetupPageProps = {
@@ -41,7 +40,6 @@ export default async function ProfileSetupPage({
     <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center px-4 py-12">
       <Card className="w-full">
         <CardHeader>
-          <CardTitle className="text-3xl">Profile setup</CardTitle>
           <CardDescription>
             Tell FeelDriven how you work so the workspace can personalize your
             next steps.

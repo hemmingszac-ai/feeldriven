@@ -23,8 +23,7 @@ export default function HomePage() {
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="grid gap-3">
-          <h2 className="text-lg font-medium">Starter app features</h2>
+        <CardContent className="grid gap-6 pt-6">
           <ul className="grid gap-2 text-sm text-muted-foreground">
             <li>Next.js App Router scaffold</li>
             <li>TypeScript support</li>

@@ -1,7 +1,7 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { BarChart3, LogOut, Megaphone, UserRound, UsersRound } from 'lucide-react'
 import { signout } from '@/app/auth/actions'
+import { SidebarLogoTrigger } from '@/components/sidebar-logo-trigger'
 import { Button } from '@/components/ui/button'
 import {
   Sidebar,
@@ -9,7 +9,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
@@ -17,8 +16,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarRail,
-  SidebarSeparator,
-  SidebarTrigger,
+  SidebarSeparator
 } from '@/components/ui/sidebar'
 
 type AppShellProps = {
@@ -67,41 +65,15 @@ export function AppShell({
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton
-                size="lg"
-                render={<Link href="/dashboard" />}
-                tooltip="feeldriven.com"
-              >
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-md">
-                  <Image
-                    src="/logos/iconlogo.svg"
-                    alt=""
-                    width={32}
-                    height={28}
-                    className="h-7 w-8 object-contain"
-                    priority
-                  />
-                </div>
-                <div className="flex min-w-0 flex-1 items-center group-data-[collapsible=icon]:hidden">
-                  <Image
-                    src="/logos/longlogo.svg"
-                    alt="feeldriven.com"
-                    width={166}
-                    height={28}
-                    className="h-7 w-auto object-contain"
-                    priority
-                  />
-                </div>
-              </SidebarMenuButton>
+              <SidebarLogoTrigger />
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
 
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Workspace</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>
+              <SidebarMenu className="gap-1.5">
                 {navItems.map((item) => {
                   const Icon = item.icon
 
@@ -164,16 +136,8 @@ export function AppShell({
       </Sidebar>
 
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-3 border-b bg-background/78 px-4 backdrop-blur-xl supports-[backdrop-filter]:bg-background/62 md:px-6">
-          <SidebarTrigger />
-          <div className="min-w-0">
-            <p className="truncate text-sm font-medium">FeelDriven</p>
-            <p className="truncate text-xs text-muted-foreground">
-              SaaSathon workspace
-            </p>
-          </div>
-        </header>
-        <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-8 md:py-8">
+        <SidebarLogoTrigger mobileFloating />
+        <div className="mx-auto w-full max-w-6xl px-4 py-6 pt-14 md:px-8 md:py-8">
           {children}
         </div>
       </SidebarInset>

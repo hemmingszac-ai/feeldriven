@@ -111,12 +111,9 @@ export default async function TeamMemberPage({ params }: TeamMemberPageProps) {
               {profile.last_name[0]}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-muted-foreground">
-                Team profile
-              </p>
-              <h1 className="mt-1 truncate text-3xl font-semibold tracking-normal">
+              <p className="truncate text-2xl font-semibold tracking-normal">
                 {profileName}
-              </h1>
+              </p>
             </div>
           </div>
         </section>

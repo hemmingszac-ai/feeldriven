@@ -70,14 +70,6 @@ export default async function TeamPage({ searchParams }: TeamPageProps) {
     <AppShell active="team" userEmail={user.email} userName={currentUserName}>
       <div className="grid gap-6">
         <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">
-              People directory
-            </p>
-            <h1 className="mt-1 text-3xl font-semibold tracking-normal">
-              Team
-            </h1>
-          </div>
           <form action="/team" className="flex w-full gap-2 md:w-96">
             <div className="relative min-w-0 flex-1">
               <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />

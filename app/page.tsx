@@ -18,15 +18,14 @@ export default function HomePage() {
             FeelDriven
           </CardTitle>
           <CardDescription className="max-w-3xl text-base leading-7">
-          A workplace platform that makes work feel like being part of a
-          high-performing team. Leaders turn tasks into shared missions, while
-          live progress, recognition, and rewards make employees genuinely want
-          to contribute and win together.
+            A workplace platform that makes work feel like being part of a
+            high-performing team. Leaders turn tasks into shared missions, while
+            live progress, recognition, and rewards make employees genuinely want
+            to contribute and win together.
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="grid gap-3">
-          <h2 className="text-lg font-medium">Starter app features</h2>
+        <CardContent className="grid gap-6 pt-6">
           <ul className="grid gap-2 text-sm text-muted-foreground">
             <li>Next.js App Router scaffold</li>
             <li>TypeScript support</li>

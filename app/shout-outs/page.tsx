@@ -94,13 +94,6 @@ export default async function ShoutOutsPage({
       userName={currentUserName}
     >
       <div className="mx-auto grid w-full max-w-4xl gap-6">
-        <section>
-          <p className="text-sm text-muted-foreground">Team recognition</p>
-          <h1 className="text-3xl font-semibold tracking-normal">
-            Shout-outs
-          </h1>
-        </section>
-
         <Card>
           <CardHeader>
             <CardTitle>Recognize a teammate</CardTitle>

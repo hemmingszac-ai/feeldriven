@@ -6,7 +6,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -23,7 +22,6 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
     <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-4 py-12">
       <Card className="w-full">
         <CardHeader>
-          <CardTitle className="text-2xl">Log in</CardTitle>
           <CardDescription>
             Use your email and password to access FeelDriven.
           </CardDescription>
