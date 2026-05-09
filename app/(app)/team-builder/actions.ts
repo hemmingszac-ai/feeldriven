@@ -8,25 +8,12 @@ import {
   OpenRouterError,
 } from '@/app/lib/ai/openrouter'
 import { DEFAULT_SYSTEM_PROMPT } from '@/app/lib/ai/system-prompt'
-
-export type TeamBuilderOutput = {
-  profileIds: string[]
-  requiredTeamSize: number
-  rationale: string
-}
-
-export type TeamBuilderFormState =
-  | {
-      status: 'idle'
-    }
-  | {
-      status: 'error'
-      error: string
-    }
-  | {
-      status: 'success'
-      output: TeamBuilderOutput
-    }
+import { formatProfileName } from '@/app/lib/profiles'
+import type {
+  TeamBuilderFormState,
+  TeamBuilderOutput,
+  TeamBuilderProfile,
+} from './types'
 
 const teamBuilderSchema = {
   type: 'object',
@@ -59,6 +46,25 @@ function fail(message: string): TeamBuilderFormState {
   }
 }
 
+function normalizeProfile(value: {
+  id: string
+  email: string | null
+  first_name: string
+  last_name: string
+  skills_to_develop: string[]
+  enjoyable_work: string[]
+  stretch_projects: string
+}): TeamBuilderProfile {
+  return {
+    id: value.id,
+    name: formatProfileName(value),
+    email: value.email,
+    skillsToDevelop: value.skills_to_develop ?? [],
+    enjoyableWork: value.enjoyable_work ?? [],
+    stretchProjects: value.stretch_projects ?? '',
+  }
+}
+
 function isTextAttachment(file: File) {
   return (
     file.type.startsWith('text/') ||
@@ -73,29 +79,26 @@ function isTextAttachment(file: File) {
 }
 
 async function readAttachments(formData: FormData) {
-  const files = formData
-    .getAll('attachments')
-    .filter((entry): entry is File => entry instanceof File && entry.size > 0)
+  const fileEntry = formData.get('attachments')
+  if (!(fileEntry instanceof File) || fileEntry.size === 0) {
+    return []
+  }
 
-  return Promise.all(
-    files.map(async (file) => {
-      const attachment = {
-        name: file.name,
-        type: file.type || 'application/octet-stream',
-        size: file.size,
-        content: null as string | null,
-        contentTruncated: false,
-      }
+  const attachment = {
+    name: fileEntry.name,
+    type: fileEntry.type || 'application/octet-stream',
+    size: fileEntry.size,
+    content: null as string | null,
+    contentTruncated: false,
+  }
 
-      if (isTextAttachment(file)) {
-        const content = await file.text()
-        attachment.content = content.slice(0, MAX_ATTACHMENT_TEXT_BYTES)
-        attachment.contentTruncated = content.length > MAX_ATTACHMENT_TEXT_BYTES
-      }
+  if (isTextAttachment(fileEntry)) {
+    const content = await fileEntry.text()
+    attachment.content = content.slice(0, MAX_ATTACHMENT_TEXT_BYTES)
+    attachment.contentTruncated = content.length > MAX_ATTACHMENT_TEXT_BYTES
+  }
 
-      return attachment
-    }),
-  )
+  return [attachment]
 }
 
 export async function submitTeamBuilderInput(
@@ -116,6 +119,7 @@ export async function submitTeamBuilderInput(
   }
 
   const emailComms = formData.get('emailComms')?.toString().trim() ?? ''
+  const projectTitle = formData.get('projectTitle')?.toString().trim() ?? ''
   const jobDescription = formData.get('jobDescription')?.toString().trim() ?? ''
 
   if (!jobDescription) {
@@ -124,12 +128,15 @@ export async function submitTeamBuilderInput(
 
   try {
     const database = await loadAiDatabaseContext()
+    const profiles = database.profiles.map(normalizeProfile)
+    const profileById = new Map(profiles.map((profile) => [profile.id, profile]))
 
     const result = await generateStructuredOutput({
       database,
       systemPrompt: DEFAULT_SYSTEM_PROMPT,
       form: {
         emailComms,
+        projectTitle,
         jobDescription,
         attachments: await readAttachments(formData),
       },
@@ -139,7 +146,17 @@ export async function submitTeamBuilderInput(
 
     return {
       status: 'success',
-      output: result.output as TeamBuilderOutput,
+      output: {
+        ...(result.output as Omit<
+          TeamBuilderOutput,
+          'profiles' | 'projectTitle' | 'jobDescription'
+        >),
+        profiles: (result.output as TeamBuilderOutput).profileIds
+          .map((profileId) => profileById.get(profileId))
+          .filter((profile): profile is TeamBuilderProfile => Boolean(profile)),
+        projectTitle,
+        jobDescription,
+      },
     }
   } catch (error) {
     if (error instanceof OpenRouterError) {
