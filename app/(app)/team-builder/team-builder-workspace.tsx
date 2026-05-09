@@ -10,10 +10,10 @@ import type { TeamBuilderFormState, TeamBuilderOutput } from './types'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardAction,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from '@/components/ui/card'
 import {
   Collapsible,
@@ -180,7 +180,7 @@ function TeamBuilderWorkspaceContent({
   }, [activeDreamTeamSignature])
 
   return (
-    <div className="mx-auto w-full max-w-3xl">
+    <div className="mx-auto w-full max-w-6xl">
       <Collapsible open={isFormOpen} onOpenChange={setIsFormOpen}>
         <Card size="sm">
           <CardHeader>
