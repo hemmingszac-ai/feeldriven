@@ -58,7 +58,6 @@ export async function createProfile(formData: FormData) {
   }
 
   const { error: profileError } = await supabase
-    .schema('dbo')
     .from('profiles')
     .upsert(
       {
@@ -75,7 +74,7 @@ export async function createProfile(formData: FormData) {
     )
 
   if (profileError) {
-    fail(profileError.message)
+    fail(JSON.stringify(profileError))
   }
 
   const { error: userError } = await supabase.auth.updateUser({

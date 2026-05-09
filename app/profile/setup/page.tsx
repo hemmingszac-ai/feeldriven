@@ -28,7 +28,6 @@ export default async function ProfileSetupPage({
   }
 
   const { data: profile } = await supabase
-    .schema('dbo')
     .from('profiles')
     .select('id')
     .eq('id', user.id)
