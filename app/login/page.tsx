@@ -23,17 +23,14 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
           <Link href="/">
             <img
               src="/logo.svg"
-              alt="FeelDriven"
+              alt="teamhuddle"
               style={{ height: '44px', width: 'auto' }}
             />
           </Link>
         </div>
 
         <div className="rounded-2xl bg-white p-8 shadow-2xl">
-          <h1 className="mb-1 text-xl font-semibold text-gray-900">Welcome back</h1>
-          <p className="mb-6 text-sm text-gray-500">
-            Use your email and password to access FeelDriven.
-          </p>
+          <h1 className="mb-6 text-center text-xl font-semibold text-gray-900">Welcome back</h1>
 
           {searchParams?.error ? (
             <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -99,7 +96,7 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
         </div>
 
         <p className="mt-6 text-center text-xs text-white/50">
-          © 2026 FeelDriven
+          © 2026 teamhuddle
         </p>
       </div>
     </main>
