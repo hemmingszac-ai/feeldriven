@@ -93,23 +93,74 @@ export default async function ShoutOutsPage({
       userEmail={user.email}
       userName={currentUserName}
     >
-      <div className="mx-auto grid w-full max-w-4xl gap-6">
-        <Card>
-          <CardHeader>
+      <div className="mx-auto flex h-[calc(100svh-5.5rem)] w-full max-w-4xl flex-col gap-3">
+        <section
+          className="min-h-0 flex-1 overflow-y-auto pr-1"
+          aria-label="Recent shout-outs"
+        >
+          <div className="grid gap-3 pb-2">
+            {shoutOuts.length === 0 ? (
+              <Card>
+                <CardContent className="py-8 text-center">
+                  <p className="font-medium">No shout-outs yet</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Be the first to recognize a teammate.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              shoutOuts.map((shoutOut) => {
+                const sender = getProfileName(profileMap.get(shoutOut.sender_id))
+                const recipient = getProfileName(
+                  profileMap.get(shoutOut.recipient_id)
+                )
+
+                return (
+                  <Card key={shoutOut.id}>
+                    <CardHeader>
+                      <CardTitle>
+                        {sender} praised {recipient}
+                      </CardTitle>
+                      <CardDescription>
+                        {formatTimestamp(shoutOut.created_at)}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="leading-7">{shoutOut.message}</p>
+                    </CardContent>
+                  </Card>
+                )
+              })
+            )}
+          </div>
+        </section>
+
+        <Card className="shrink-0" size="sm">
+          <CardHeader className="gap-0.5">
             <CardTitle>Recognize a teammate</CardTitle>
-            <CardDescription>
-              Share quick praise for work that deserves to be seen.
-            </CardDescription>
           </CardHeader>
           <CardContent>
-            <form action={createShoutOut} className="grid gap-4">
+            <form action={createShoutOut} className="grid gap-3">
               {searchParams?.error ? (
                 <Alert variant="destructive">
                   <AlertDescription>{searchParams.error}</AlertDescription>
                 </Alert>
               ) : null}
 
-              <div className="grid gap-2">
+              <div className="grid gap-3 md:grid-cols-[1fr_14rem] md:items-end">
+                <div className="grid gap-2 md:col-start-1 md:row-start-1 md:row-span-2">
+                  <Label htmlFor="message">Message</Label>
+                  <Textarea
+                    id="message"
+                    name="message"
+                    maxLength={SHOUT_OUT_MAX_MESSAGE_LENGTH}
+                    placeholder="Call out what they achieved and why it mattered."
+                    required
+                    className="min-h-20 md:min-h-[6.5rem]"
+                  />
+                </div>
+
+                <div className="grid gap-2 md:col-start-2 md:row-start-1">
                 <Label htmlFor="recipientId">Recipient</Label>
                 <select
                   id="recipientId"
@@ -129,60 +180,14 @@ export default async function ShoutOutsPage({
                 </select>
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="message">Message</Label>
-                <Textarea
-                  id="message"
-                  name="message"
-                  maxLength={SHOUT_OUT_MAX_MESSAGE_LENGTH}
-                  placeholder="Call out what they achieved and why it mattered."
-                  required
-                />
-              </div>
-
-              <Button type="submit" className="w-fit">
+                <Button type="submit" className="w-fit md:col-start-2 md:row-start-2 md:w-full">
                 <Megaphone className="size-4" />
                 Post shout-out
               </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
-
-        <section className="grid gap-3" aria-label="Recent shout-outs">
-          {shoutOuts.length === 0 ? (
-            <Card>
-              <CardContent className="py-8 text-center">
-                <p className="font-medium">No shout-outs yet</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Be the first to recognize a teammate.
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            shoutOuts.map((shoutOut) => {
-              const sender = getProfileName(profileMap.get(shoutOut.sender_id))
-              const recipient = getProfileName(
-                profileMap.get(shoutOut.recipient_id)
-              )
-
-              return (
-                <Card key={shoutOut.id}>
-                  <CardHeader>
-                    <CardTitle>
-                      {sender} praised {recipient}
-                    </CardTitle>
-                    <CardDescription>
-                      {formatTimestamp(shoutOut.created_at)}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="leading-7">{shoutOut.message}</p>
-                  </CardContent>
-                </Card>
-              )
-            })
-          )}
-        </section>
       </div>
     </AppShell>
   )
