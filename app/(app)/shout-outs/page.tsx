@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -42,6 +41,18 @@ function formatTimestamp(value: string) {
   }).format(new Date(value))
 }
 
+function getPosterClassName(message: string) {
+  if (message.length > 220) {
+    return 'min-h-72'
+  }
+
+  if (message.length > 120) {
+    return 'min-h-56'
+  }
+
+  return 'min-h-44'
+}
+
 export default async function ShoutOutsPage({
   searchParams,
 }: ShoutOutsPageProps) {
@@ -73,7 +84,7 @@ export default async function ShoutOutsPage({
         className="min-h-0 flex-1 overflow-y-auto pr-1"
         aria-label="Recent shout-outs"
       >
-        <div className="grid gap-3 pb-2">
+        <div className="columns-1 gap-3 pb-2 sm:columns-2 xl:columns-3">
           {shoutOuts.length === 0 ? (
             <Card>
               <CardContent className="py-8 text-center">
@@ -91,17 +102,35 @@ export default async function ShoutOutsPage({
               )
 
               return (
-                <Card key={shoutOut.id}>
-                  <CardHeader>
-                    <CardTitle>
-                      {sender} praised {recipient}
-                    </CardTitle>
-                    <CardDescription>
-                      {formatTimestamp(shoutOut.created_at)}
-                    </CardDescription>
+                <Card
+                  key={shoutOut.id}
+                  className={`mb-3 inline-block w-full max-w-none break-inside-avoid ${getPosterClassName(
+                    shoutOut.message
+                  )}`}
+                >
+                  <CardHeader className="gap-0.5">
+                    <div className="flex items-start justify-between gap-3">
+                      <CardTitle>{recipient}</CardTitle>
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-primary/10">
+                        <Megaphone className="size-4" />
+                      </div>
+                    </div>
                   </CardHeader>
-                  <CardContent>
-                    <p className="leading-7">{shoutOut.message}</p>
+                  <CardContent className="flex flex-1 flex-col gap-4 text-sm">
+                    <div className="flex h-full flex-col">
+                      <div className="flex flex-1 flex-col justify-center py-5">
+                        <p className="text-balance text-xl font-semibold leading-snug">
+                          "{shoutOut.message}"
+                        </p>
+                      </div>
+
+                      <div className="border-t pt-3 text-sm">
+                        <p className="font-medium">Recognized by {sender}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {formatTimestamp(shoutOut.created_at)}
+                        </p>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               )
