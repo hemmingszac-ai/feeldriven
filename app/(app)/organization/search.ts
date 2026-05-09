@@ -5,8 +5,6 @@ export type OrganizationProfile = {
   skills_to_develop: string[]
   enjoyable_work: string[]
   stretch_projects: string
-  created_at: string | null
-  updated_at: string | null
 }
 
 export function getOrganizationProfileName(

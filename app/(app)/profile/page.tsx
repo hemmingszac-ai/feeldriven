@@ -1,4 +1,4 @@
-import { Award, Brain, CalendarDays, Sparkles, Target, UserRound } from 'lucide-react'
+import { Award, Brain, Sparkles, Target } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
 import {
   Card,
@@ -7,18 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-
-function formatDate(value: string | null) {
-  if (!value) {
-    return 'Not recorded'
-  }
-
-  return new Intl.DateTimeFormat('en', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(new Date(value))
-}
 
 function PillList({ items }: { items: string[] }) {
   return (
@@ -39,7 +27,6 @@ export default async function ProfilePage() {
   const { profile, user, userName } = await getCurrentUserProfile()
   const role = user.user_metadata?.role ?? 'Role not set'
   const skillCount = profile.skills_to_develop.length
-  const workTypeCount = profile.enjoyable_work.length
 
   return (
     <div className="grid gap-6">
@@ -66,7 +53,7 @@ export default async function ProfilePage() {
         </div>
       </section>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -88,21 +75,7 @@ export default async function ProfilePage() {
             <CardDescription>Preferred contribution styles.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-semibold">{workTypeCount}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CalendarDays className="size-4" />
-              Updated
-            </CardTitle>
-            <CardDescription>Latest profile refresh.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">
-              {formatDate(profile.updated_at)}
-            </p>
+            <PillList items={profile.enjoyable_work} />
           </CardContent>
         </Card>
       </div>
@@ -147,28 +120,6 @@ export default async function ProfilePage() {
           <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
             {profile.stretch_projects}
           </p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <UserRound className="size-4" />
-            Profile record
-          </CardTitle>
-          <CardDescription>
-            Account profile dates for workspace setup.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-3 text-sm sm:grid-cols-2">
-          <div>
-            <p className="text-muted-foreground">Created</p>
-            <p className="font-medium">{formatDate(profile.created_at)}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">Last updated</p>
-            <p className="font-medium">{formatDate(profile.updated_at)}</p>
-          </div>
         </CardContent>
       </Card>
     </div>

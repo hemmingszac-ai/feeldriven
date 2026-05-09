@@ -1,12 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import {
-  ArrowLeft,
-  CalendarDays,
-  Sparkles,
-  Target,
-  UserRound,
-} from 'lucide-react'
+import { ArrowLeft, Sparkles, Target } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
 import { getOrganizationProfileName, type OrganizationProfile } from '../search'
 import { buttonVariants } from '@/components/ui/button'
@@ -22,18 +16,6 @@ type OrganizationMemberPageProps = {
   params: {
     id: string
   }
-}
-
-function formatDate(value: string | null) {
-  if (!value) {
-    return 'Not recorded'
-  }
-
-  return new Intl.DateTimeFormat('en', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(new Date(value))
 }
 
 function PillList({ items }: { items: string[] }) {
@@ -61,7 +43,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select(
-      'id, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects, created_at, updated_at'
+      'id, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects'
     )
     .eq('id', params.id)
     .maybeSingle<OrganizationProfile>()
@@ -141,7 +123,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -151,37 +133,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
             <CardDescription>Preferred contribution styles.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-semibold">
-              {profile.enjoyable_work.length}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CalendarDays className="size-4" />
-              Updated
-            </CardTitle>
-            <CardDescription>Latest profile refresh.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">
-              {formatDate(profile.updated_at)}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <UserRound className="size-4" />
-              Created
-            </CardTitle>
-            <CardDescription>Profile creation date.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">
-              {formatDate(profile.created_at)}
-            </p>
+            <PillList items={profile.enjoyable_work} />
           </CardContent>
         </Card>
       </div>
