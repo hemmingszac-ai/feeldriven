@@ -40,5 +40,6 @@ export const config = {
     '/profile/:path*',
     '/organization/:path*',
     '/shout-outs/:path*',
+    '/team-builder/:path*',
   ],
 }

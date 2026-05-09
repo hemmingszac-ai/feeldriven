@@ -21,12 +21,14 @@ type AppShellProps = {
   children: React.ReactNode
   userEmail?: string | null
   userName: string
+  userRole?: string | null
 }
 
 export function AppShell({
   children,
   userEmail,
   userName,
+  userRole,
 }: AppShellProps) {
   return (
     <SidebarProvider>
@@ -40,7 +42,7 @@ export function AppShell({
         </SidebarHeader>
 
         <SidebarContent>
-          <AppNav />
+          <AppNav userRole={userRole} />
         </SidebarContent>
 
         <SidebarSeparator />

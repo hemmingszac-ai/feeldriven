@@ -8,9 +8,10 @@ export default async function ProtectedAppLayout({
   children: ReactNode
 }) {
   const { user, userName } = await getCurrentUserProfile()
+  const userRole = user.user_metadata?.role
 
   return (
-    <AppShell userEmail={user.email} userName={userName}>
+    <AppShell userEmail={user.email} userName={userName} userRole={userRole}>
       {children}
     </AppShell>
   )

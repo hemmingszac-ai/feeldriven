@@ -2,7 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { BarChart3, Megaphone, UserRound, UsersRound } from 'lucide-react'
+import {
+  BarChart3,
+  BriefcaseBusiness,
+  Megaphone,
+  UserRound,
+  UsersRound,
+} from 'lucide-react'
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -36,16 +42,30 @@ const navItems = [
     label: 'Organization',
     icon: UsersRound,
   },
+  {
+    id: 'team-builder',
+    href: '/team-builder',
+    label: 'Team Builder',
+    icon: BriefcaseBusiness,
+    managerOnly: true,
+  },
 ] as const
 
-export function AppNav() {
+type AppNavProps = {
+  userRole?: string | null
+}
+
+export function AppNav({ userRole }: AppNavProps) {
   const pathname = usePathname()
+  const isManager = userRole === 'Team Manager'
 
   return (
     <SidebarGroup>
       <SidebarGroupContent>
         <SidebarMenu className="gap-1.5">
-          {navItems.map((item) => {
+          {navItems
+            .filter((item) => !item.managerOnly || isManager)
+            .map((item) => {
             const Icon = item.icon
             const isActive =
               pathname === item.href || pathname.startsWith(`${item.href}/`)
@@ -62,7 +82,7 @@ export function AppNav() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )
-          })}
+            })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
