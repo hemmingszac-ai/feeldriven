@@ -119,7 +119,7 @@ export function TeamBuilderEmail({ output, selectedIds }: TeamBuilderEmailProps)
           }}
         >
           <Mail className="size-4" />
-          Draft Email
+          Start Huddle
         </Button>
         {!canDraftEmail ? (
           <p className="text-sm text-muted-foreground">

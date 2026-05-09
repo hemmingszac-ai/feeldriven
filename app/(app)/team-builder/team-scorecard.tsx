@@ -47,10 +47,45 @@ export function TeamScorecard({
     [output.profileIds],
   )
 
-  const selectedProfiles = selectedIds
-    .map((id) => profileMap.get(id))
-    .filter((profile): profile is TeamBuilderProfile => Boolean(profile))
-  const benchProfiles = output.profiles.filter((profile) => !selectedIds.includes(profile.id))
+  const profileOrderById = useMemo(
+    () => new Map(output.profiles.map((profile, index) => [profile.id, index] as const)),
+    [output.profiles],
+  )
+
+  const sortProfilesByRecommendation = (profiles: TeamBuilderProfile[]) =>
+    [...profiles].sort((left, right) => {
+      const leftRank = recommendationRankByProfileId.get(left.id)
+      const rightRank = recommendationRankByProfileId.get(right.id)
+
+      if (leftRank != null && rightRank != null) {
+        if (leftRank !== rightRank) {
+          return leftRank - rightRank
+        }
+
+        return (
+          (profileOrderById.get(left.id) ?? 0) - (profileOrderById.get(right.id) ?? 0)
+        )
+      }
+
+      if (leftRank != null) {
+        return -1
+      }
+
+      if (rightRank != null) {
+        return 1
+      }
+
+      return (profileOrderById.get(left.id) ?? 0) - (profileOrderById.get(right.id) ?? 0)
+    })
+
+  const selectedProfiles = sortProfilesByRecommendation(
+    selectedIds
+      .map((id) => profileMap.get(id))
+      .filter((profile): profile is TeamBuilderProfile => Boolean(profile)),
+  )
+  const benchProfiles = sortProfilesByRecommendation(
+    output.profiles.filter((profile) => !selectedIds.includes(profile.id)),
+  )
   const showDropZones = Boolean(dragSource)
 
   useEffect(() => {
