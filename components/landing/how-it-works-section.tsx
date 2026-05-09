@@ -210,29 +210,35 @@ export function HowItWorksSection() {
 
                 {/* Selected lineup */}
                 <div className="rounded-xl border border-gray-200 bg-white p-3 space-y-3">
-                  <p className="text-xs font-semibold text-gray-700">Selected lineup</p>
-                  <div className="flex gap-2 overflow-x-auto pb-1">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-700">Selected lineup</p>
+                    <p className="mt-1 min-h-4 text-xs leading-4 text-gray-400">
+                      {visibleCount < 2 ? "No players selected yet." : ""}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 overflow-hidden pb-1">
                     {selectedMembers.map((m, i) => (
                       <SelectedCard key={m.name} member={m} delay={i * 150} visible={visibleCount >= 2} />
                     ))}
-                    {visibleCount < 2 && (
-                      <p className="text-xs text-gray-400 py-4">No players selected yet.</p>
-                    )}
                   </div>
                 </div>
 
                 {/* Bench */}
                 <div className="rounded-xl border border-gray-200 bg-white p-3 space-y-3">
-                  <p className="text-xs font-semibold text-gray-700">Bench (available to swap in)</p>
-                  <div className="flex gap-2 overflow-x-auto pb-1">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-700">Bench (available to swap in)</p>
+                    <p className="mt-1 min-h-4 text-xs leading-4 text-gray-400">
+                      {visibleCount < 4
+                        ? visibleCount === 0
+                          ? "Paste a brief to get started."
+                          : "Scanning for candidates..."
+                        : ""}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 overflow-hidden pb-1">
                     {benchMembers.map((m, i) => (
                       <BenchCard key={m.name} member={m} delay={i * 150 + 300} visible={visibleCount >= 4} />
                     ))}
-                    {visibleCount < 4 && (
-                      <p className="text-xs text-gray-400 py-4">
-                        {visibleCount === 0 ? "Paste a brief to get started." : "Scanning for candidates..."}
-                      </p>
-                    )}
                   </div>
                 </div>
 
