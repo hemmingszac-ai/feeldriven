@@ -1,14 +1,12 @@
-import Link from 'next/link'
-import { BarChart3, LogOut, Megaphone, UserRound, UsersRound } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import { signout } from '@/app/auth/actions'
+import { AppNav } from '@/components/app-nav'
 import { SidebarLogoTrigger } from '@/components/sidebar-logo-trigger'
 import { Button } from '@/components/ui/button'
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
@@ -20,41 +18,12 @@ import {
 } from '@/components/ui/sidebar'
 
 type AppShellProps = {
-  active: 'dashboard' | 'profile' | 'shout-outs' | 'team'
   children: React.ReactNode
   userEmail?: string | null
   userName: string
 }
 
-const navItems = [
-  {
-    id: 'dashboard',
-    href: '/dashboard',
-    label: 'Dashboard',
-    icon: BarChart3,
-  },
-  {
-    id: 'profile',
-    href: '/profile',
-    label: 'Profile',
-    icon: UserRound,
-  },
-  {
-    id: 'shout-outs',
-    href: '/shout-outs',
-    label: 'Shout-outs',
-    icon: Megaphone,
-  },
-  {
-    id: 'team',
-    href: '/team',
-    label: 'Team',
-    icon: UsersRound,
-  },
-] as const
-
 export function AppShell({
-  active,
   children,
   userEmail,
   userName,
@@ -71,28 +40,7 @@ export function AppShell({
         </SidebarHeader>
 
         <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu className="gap-1.5">
-                {navItems.map((item) => {
-                  const Icon = item.icon
-
-                  return (
-                    <SidebarMenuItem key={item.id}>
-                      <SidebarMenuButton
-                        render={<Link href={item.href} />}
-                        isActive={active === item.id}
-                        tooltip={item.label}
-                      >
-                        <Icon className="size-4" />
-                        <span>{item.label}</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          <AppNav />
         </SidebarContent>
 
         <SidebarSeparator />
