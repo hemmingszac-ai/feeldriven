@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Mail } from 'lucide-react'
-import type { TeamBuilderOutput } from './types'
+import type { TeamBuilderOutput, TeamBuilderProfile } from './types'
 import { PlayerCard } from './player-card'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -105,9 +105,8 @@ export function TeamScorecard({ output }: TeamScorecardProps) {
       </CardHeader>
       <CardContent className="grid gap-5">
         <section
-          className={`grid gap-3 rounded-xl border p-3 ${
-            activeDropZone === 'selected' ? 'border-primary ring-2 ring-primary/20' : 'border-border/70'
-          }`}
+          className={`grid gap-3 rounded-xl border p-3 ${activeDropZone === 'selected' ? 'border-primary ring-2 ring-primary/20' : 'border-border/70'
+            }`}
           onDragOver={(event) => {
             event.preventDefault()
             setActiveDropZone('selected')
@@ -142,9 +141,8 @@ export function TeamScorecard({ output }: TeamScorecardProps) {
         </section>
 
         <section
-          className={`grid gap-3 rounded-xl border p-3 ${
-            activeDropZone === 'bench' ? 'border-primary ring-2 ring-primary/20' : 'border-border/70'
-          }`}
+          className={`grid gap-3 rounded-xl border p-3 ${activeDropZone === 'bench' ? 'border-primary ring-2 ring-primary/20' : 'border-border/70'
+            }`}
           onDragOver={(event) => {
             event.preventDefault()
             setActiveDropZone('bench')
