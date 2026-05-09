@@ -21,12 +21,24 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('first_name, last_name')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  if (profileError || !profile) {
+    redirect('/profile/setup')
+  }
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center px-4 py-12">
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-3xl">Dashboard</CardTitle>
-          <CardDescription>You are signed in as {user.email}.</CardDescription>
+          <CardDescription>
+            Welcome back, {profile.first_name} {profile.last_name}.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
