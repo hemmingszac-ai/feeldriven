@@ -204,7 +204,7 @@ export function TeamScorecard({
   }
 
   return (
-    <Card className="mt-6 border-primary/20 bg-gradient-to-b from-primary/5 to-background">
+    <Card className="mt-6 border-primary/20 bg-linear-to-b from-primary/5 to-background">
       <CardHeader className="gap-2">
         <Tooltip>
           <TooltipTrigger

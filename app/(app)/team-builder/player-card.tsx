@@ -66,10 +66,10 @@ export function PlayerCard({
         onPointerDown(profile.id, selected ? 'selected' : 'bench', event)
       }}
       data-dragging={dragging ? 'true' : 'false'}
-      className={`team-builder-player-card group relative aspect-[4/6] w-full max-w-40 select-none touch-pan-x overflow-hidden rounded-xl border-2 p-1.5 shadow-sm transition ${
+      className={`team-builder-player-card group relative aspect-4/6 w-full max-w-40 select-none touch-pan-x overflow-hidden rounded-xl border-2 p-1.5 shadow-sm transition ${
         selected
-          ? 'border-primary/60 bg-gradient-to-b from-primary/15 via-background to-background'
-          : 'border-border/80 bg-gradient-to-b from-secondary/20 to-background'
+          ? 'border-primary/60 bg-linear-to-b from-primary/15 via-background to-background'
+          : 'border-border/80 bg-linear-to-b from-secondary/20 to-background'
       } ${isManager ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'} ${highlight ? 'ring-2 ring-primary/35' : ''} ${dragging ? 'cursor-grabbing opacity-90' : ''}`}
     >
       {!isManager ? (

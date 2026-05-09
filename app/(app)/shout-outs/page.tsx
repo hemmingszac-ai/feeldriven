@@ -117,7 +117,7 @@ export default async function ShoutOutsPage({
       </section>
 
       <Card className="mt-2 shrink-0 overflow-hidden border-primary/20 pt-0 shadow-md shadow-primary/10">
-        <CardHeader className="gap-1 border-b border-border/70 bg-linear-to-r from-primary/10 via-accent/35 to-transparent !py-2">
+        <CardHeader className="gap-1 border-b border-border/70 bg-linear-to-r from-primary/10 via-accent/35 to-transparent py-2!">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger className="w-fit rounded-md text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
@@ -148,7 +148,7 @@ export default async function ShoutOutsPage({
                   maxLength={SHOUT_OUT_MAX_MESSAGE_LENGTH}
                   placeholder="Call out what they achieved and why it mattered."
                   required
-                  className="min-h-20 md:min-h-[6.5rem]"
+                  className="min-h-20 md:min-h-26"
                 />
               </div>
 

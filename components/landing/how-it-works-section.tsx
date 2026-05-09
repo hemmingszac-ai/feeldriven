@@ -138,7 +138,7 @@ export function HowItWorksSection() {
       ref={sectionRef}
       className="relative py-24 lg:py-32 overflow-hidden bg-white"
     >
-      <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-350 mx-auto px-6 lg:px-12">
         {/* Header */}
         <div className="mb-16 lg:mb-24">
           <h2

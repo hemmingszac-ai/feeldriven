@@ -13,7 +13,7 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
   return (
     <main className="brand-page relative flex min-h-screen items-center justify-center px-4 py-12">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 opacity-20 sm:h-[640px] sm:w-[640px]">
+        <div className="absolute left-1/2 top-1/2 h-130 w-130 -translate-x-1/2 -translate-y-1/2 opacity-20 sm:h-160 sm:w-160">
           <AnimatedSphere />
         </div>
       </div>
