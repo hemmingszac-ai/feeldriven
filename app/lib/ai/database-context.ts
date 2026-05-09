@@ -28,7 +28,8 @@ export async function loadAiDatabaseContext() {
         sender:profiles!shout_outs_sender_id_fkey(id, first_name, last_name),
         recipient:profiles!shout_outs_recipient_id_fkey(id, first_name, last_name)
       `)
-      .order('created_at', { ascending: false }),
+      .order('created_at', { ascending: false })
+      .limit(2),
   ])
 
   if (profilesResult.error) {

@@ -67,14 +67,14 @@ export default async function ShoutOutsPage({
   )
 
   return (
-    <div className="mx-auto flex h-[calc(100svh-5.5rem)] w-full max-w-4xl flex-col gap-3">
+    <div className="mx-auto flex h-[calc(100svh-5.5rem)] w-full max-w-6xl flex-col gap-3">
       <section
         className="min-h-0 flex-1 overflow-y-auto pr-1"
         aria-label="Recent shout-outs"
       >
-        <div className="columns-1 gap-3 pb-2 sm:columns-2 xl:columns-3">
+        <div className="grid gap-3 pb-2 sm:grid-cols-2 xl:grid-cols-3">
           {shoutOuts.length === 0 ? (
-            <Card>
+            <Card className="sm:col-span-2 xl:col-span-3">
               <CardContent className="py-8 text-center">
                 <p className="font-medium">No shout-outs yet</p>
                 <p className="mt-1 text-sm text-muted-foreground">
@@ -96,7 +96,7 @@ export default async function ShoutOutsPage({
                   sender={sender}
                   message={shoutOut.message}
                   createdAt={shoutOut.created_at}
-                  className={`mb-3 inline-block w-full max-w-none break-inside-avoid ${getShoutOutCardClassName(
+                  className={`w-full max-w-none ${getShoutOutCardClassName(
                     shoutOut.message
                   )}`}
                 />
