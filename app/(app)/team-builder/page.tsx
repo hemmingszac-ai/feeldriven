@@ -6,7 +6,7 @@ export default async function TeamBuilderPage() {
   const { user } = await getCurrentUserProfile()
 
   if (user.user_metadata?.role !== 'Team Manager') {
-    redirect('/dashboard')
+    redirect('/shout-outs')
   }
 
   return <TeamBuilderWorkspace />

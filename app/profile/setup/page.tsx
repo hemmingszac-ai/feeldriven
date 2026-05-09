@@ -33,7 +33,7 @@ export default async function ProfileSetupPage({
     .maybeSingle()
 
   if (profile) {
-    redirect('/dashboard')
+    redirect('/shout-outs')
   }
 
   return (

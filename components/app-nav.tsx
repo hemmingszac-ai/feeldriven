@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  BarChart3,
   BriefcaseBusiness,
   Megaphone,
   UserRound,
@@ -25,12 +24,6 @@ type NavItem = {
   managerOnly?: boolean
 }
 const navItems: NavItem[] = [
-  {
-    id: 'dashboard',
-    href: '/dashboard',
-    label: 'Dashboard',
-    icon: BarChart3,
-  },
   {
     id: 'profile',
     href: '/profile',

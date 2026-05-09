@@ -115,7 +115,7 @@ export async function submitTeamBuilderInput(
   }
 
   if (user.user_metadata?.role !== 'Team Manager') {
-    redirect('/dashboard')
+    redirect('/shout-outs')
   }
 
   const emailComms = formData.get('emailComms')?.toString().trim() ?? ''

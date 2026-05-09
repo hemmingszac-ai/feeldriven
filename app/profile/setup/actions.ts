@@ -88,5 +88,5 @@ export async function createProfile(formData: FormData) {
     fail(userError.message)
   }
 
-  redirect('/dashboard')
+  redirect('/shout-outs')
 }
