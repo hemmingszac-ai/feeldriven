@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import { BadgeCheck, Radar, Sparkles } from 'lucide-react'
 import { createClient } from '../lib/supabase/server'
 import { AppShell } from '@/components/app-shell'
 import {
@@ -46,27 +47,36 @@ export default async function DashboardPage() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
-          <Card>
+          <Card className="border-t-4 border-t-primary">
             <CardHeader>
-              <CardTitle>Profile ready</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <BadgeCheck className="size-4 text-primary" />
+                Profile ready
+              </CardTitle>
               <CardDescription>Your FieldDriven identity is set.</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-semibold">100%</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-t-4 border-t-info">
             <CardHeader>
-              <CardTitle>Growth focus</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="size-4 text-info" />
+                Growth focus
+              </CardTitle>
               <CardDescription>Skills selected for development.</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-semibold">Active</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-t-4 border-t-warning">
             <CardHeader>
-              <CardTitle>Mission fit</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Radar className="size-4 text-warning" />
+                Mission fit
+              </CardTitle>
               <CardDescription>Work preferences ready for matching.</CardDescription>
             </CardHeader>
             <CardContent>

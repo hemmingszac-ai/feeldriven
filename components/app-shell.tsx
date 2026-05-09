@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { BarChart3, LogOut, Megaphone, UserRound, UsersRound } from 'lucide-react'
 import { signout } from '@/app/auth/actions'
@@ -66,15 +67,30 @@ export function AppShell({
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton size="lg" render={<Link href="/dashboard" />}>
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground">
-                  FD
+              <SidebarMenuButton
+                size="lg"
+                render={<Link href="/dashboard" />}
+                tooltip="feeldriven.com"
+              >
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-md">
+                  <Image
+                    src="/logos/iconlogo.svg"
+                    alt=""
+                    width={32}
+                    height={28}
+                    className="h-7 w-8 object-contain"
+                    priority
+                  />
                 </div>
-                <div className="grid min-w-0 flex-1 text-left leading-tight">
-                  <span className="truncate font-semibold">FieldDriven</span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    Productivity workspace
-                  </span>
+                <div className="flex min-w-0 flex-1 items-center group-data-[collapsible=icon]:hidden">
+                  <Image
+                    src="/logos/longlogo.svg"
+                    alt="feeldriven.com"
+                    width={166}
+                    height={28}
+                    className="h-7 w-auto object-contain"
+                    priority
+                  />
                 </div>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -113,7 +129,7 @@ export function AppShell({
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" tooltip={userName}>
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-xs font-semibold text-secondary-foreground">
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-xs font-semibold text-foreground ring-1 ring-primary/20">
                   {userName
                     .split(' ')
                     .map((part) => part[0])
@@ -147,8 +163,8 @@ export function AppShell({
         <SidebarRail />
       </Sidebar>
 
-      <SidebarInset className="bg-muted/30">
-        <header className="flex h-14 shrink-0 items-center gap-3 border-b bg-background px-4 md:px-6">
+      <SidebarInset>
+        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-3 border-b bg-background/78 px-4 backdrop-blur-xl supports-[backdrop-filter]:bg-background/62 md:px-6">
           <SidebarTrigger />
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">FieldDriven</p>

@@ -19,3 +19,11 @@ test('sidebar exposes team navigation', async () => {
   assert.match(source, /href:\s*'\/team'/)
   assert.match(source, /label:\s*'Team'/)
 })
+
+test('sidebar brand uses svg logo assets', async () => {
+  const source = await readFile(new URL('./app-shell.tsx', import.meta.url), 'utf8')
+
+  assert.match(source, /\/logos\/longlogo\.svg/)
+  assert.match(source, /\/logos\/iconlogo\.svg/)
+  assert.doesNotMatch(source, />\s*FD\s*</)
+})
