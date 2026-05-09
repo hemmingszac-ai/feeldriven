@@ -27,7 +27,7 @@ export default async function OrganizationPage({ searchParams }: OrganizationPag
   const { data: profiles = [] } = await supabase
     .from('profiles')
     .select(
-      'id, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects'
+      'id, first_name, last_name, role, skills_to_develop, enjoyable_work, stretch_projects'
     )
     .order('first_name', { ascending: true })
     .order('last_name', { ascending: true })

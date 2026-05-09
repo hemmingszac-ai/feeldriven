@@ -23,14 +23,14 @@ type AppShellProps = {
   children: React.ReactNode
   userEmail?: string | null
   userName: string
-  userRole?: string | null
+  isManager: boolean
 }
 
 export function AppShell({
   children,
   userEmail,
   userName,
-  userRole,
+  isManager,
 }: AppShellProps) {
   return (
     <TooltipProvider>
@@ -45,7 +45,7 @@ export function AppShell({
           </SidebarHeader>
 
           <SidebarContent>
-            <AppNav userRole={userRole} />
+            <AppNav isManager={isManager} />
           </SidebarContent>
 
           <SidebarSeparator />
@@ -86,7 +86,7 @@ export function AppShell({
 
         <SidebarInset>
           <SidebarLogoTrigger mobileFloating />
-          <div className="mx-auto w-full max-w-6xl px-4 py-6 pt-14 md:px-8 md:py-8">
+          <div className="mx-auto w-full max-w-6xl px-4 pt-14 pb-4 md:px-8 md:pt-8 md:pb-5">
             {children}
           </div>
         </SidebarInset>

@@ -2,6 +2,7 @@ export type TeamBuilderProfile = {
   id: string
   name: string
   email: string | null
+  role: string | null
   skillsToDevelop: string[]
   enjoyableWork: string[]
   stretchProjects: string

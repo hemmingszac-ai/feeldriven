@@ -6,6 +6,7 @@ import { loadAiDatabaseContext } from '@/app/lib/ai/database-context'
 import { generateStructuredOutput, OpenRouterError } from '@/app/lib/ai/openrouter'
 import { TEAM_BUILDER_EMAIL_PROMPT } from '@/app/lib/ai/system-prompt'
 import { formatProfileName } from '@/app/lib/profiles'
+import { getIsManager } from '@/app/lib/user-metadata'
 import type { TeamBuilderProfile } from './types'
 
 const teamBuilderEmailBodySchema = {
@@ -46,6 +47,7 @@ function normalizeProfile(value: {
   email: string | null
   first_name: string
   last_name: string
+  role: string | null
   skills_to_develop: string[]
   enjoyable_work: string[]
   stretch_projects: string
@@ -54,6 +56,7 @@ function normalizeProfile(value: {
     id: value.id,
     name: formatProfileName(value),
     email: value.email,
+    role: value.role,
     skillsToDevelop: value.skills_to_develop ?? [],
     enjoyableWork: value.enjoyable_work ?? [],
     stretchProjects: value.stretch_projects ?? '',
@@ -80,7 +83,7 @@ export async function regenerateTeamBuilderEmailBody(
     redirect('/login')
   }
 
-  if (user.user_metadata?.role !== 'Team Manager') {
+  if (!getIsManager(user.user_metadata)) {
     redirect('/shout-outs')
   }
 

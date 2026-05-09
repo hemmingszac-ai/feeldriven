@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
+import { getIsManager } from '@/app/lib/user-metadata'
 import { AppShell } from '@/components/app-shell'
 
 export default async function ProtectedAppLayout({
@@ -8,10 +9,10 @@ export default async function ProtectedAppLayout({
   children: ReactNode
 }) {
   const { user, userName } = await getCurrentUserProfile()
-  const userRole = user.user_metadata?.role
+  const isManager = getIsManager(user.user_metadata)
 
   return (
-    <AppShell userEmail={user.email} userName={userName} userRole={userRole}>
+    <AppShell userEmail={user.email} userName={userName} isManager={isManager}>
       {children}
     </AppShell>
   )

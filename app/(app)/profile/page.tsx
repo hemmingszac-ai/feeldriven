@@ -1,6 +1,7 @@
-import { Award, Brain, Mail, Sparkles } from 'lucide-react'
+import { Award, BriefcaseBusiness, Brain, Mail, Sparkles } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
 import { getProfileInitials } from '@/app/lib/profiles'
+import { getIsManager } from '@/app/lib/user-metadata'
 import {
   ProfileDetailsGrid,
   ProfileGrowthCard,
@@ -15,7 +16,8 @@ import {
 export default async function ProfilePage() {
   const { profile, supabase, user, userName } = await getCurrentUserProfile()
   const userEmail = profile.email ?? user.email ?? 'Email not set'
-  const role = user.user_metadata?.role ?? 'Role not set'
+  const role = profile.role ?? 'Role not set'
+  const isManager = getIsManager(user.user_metadata)
   const skillCount = profile.skills_to_develop.length
   const workModeCount = profile.enjoyable_work.length
 
@@ -38,15 +40,25 @@ export default async function ProfilePage() {
         name={userName}
         initials={getProfileInitials(profile)}
         meta={
-          <p className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
-            <Mail className="size-4 shrink-0" />
-            <span className="truncate">{userEmail}</span>
-          </p>
+          <div className="grid gap-2 text-sm text-muted-foreground">
+            <p className="flex min-w-0 items-center gap-2">
+              <Mail className="size-4 shrink-0" />
+              <span className="truncate">{userEmail}</span>
+            </p>
+          </div>
         }
         action={
-          <div className="inline-flex w-fit items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium">
-            <Award className="size-4" />
-            {role}
+          <div className="flex flex-wrap justify-end gap-2">
+            <div className="inline-flex w-fit items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium">
+              <BriefcaseBusiness className="size-4" />
+              {role}
+            </div>
+            {isManager ? (
+              <div className="inline-flex w-fit items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium">
+                <Award className="size-4" />
+                Manager
+              </div>
+            ) : null}
           </div>
         }
       />

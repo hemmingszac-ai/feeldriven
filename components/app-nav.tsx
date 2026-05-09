@@ -52,12 +52,11 @@ const navItems: NavItem[] = [
 ] as const
 
 type AppNavProps = {
-  userRole?: string | null
+  isManager: boolean
 }
 
-export function AppNav({ userRole }: AppNavProps) {
+export function AppNav({ isManager }: AppNavProps) {
   const pathname = usePathname()
-  const isManager = userRole === 'Team Manager'
 
   return (
     <SidebarGroup>

@@ -4,6 +4,7 @@ export type OrganizationProfile = {
   id: string
   first_name: string
   last_name: string
+  role?: string | null
   skills_to_develop: string[]
   enjoyable_work: string[]
   stretch_projects: string
