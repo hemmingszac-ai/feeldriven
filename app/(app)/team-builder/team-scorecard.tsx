@@ -2,16 +2,15 @@
 
 import type { RefObject } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Mail } from 'lucide-react'
 import type { TeamBuilderOutput, TeamBuilderProfile } from './types'
 import { PlayerCard } from './player-card'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { TeamBuilderEmail } from './team-builder-email'
 
 type DragSource = {
   profileId: string
@@ -51,19 +50,8 @@ export function TeamScorecard({
   const selectedProfiles = selectedIds
     .map((id) => profileMap.get(id))
     .filter((profile): profile is TeamBuilderProfile => Boolean(profile))
-
   const benchProfiles = output.profiles.filter((profile) => !selectedIds.includes(profile.id))
   const showDropZones = Boolean(dragSource)
-  const selectedEmails = selectedProfiles
-    .map((profile) => profile.email?.trim())
-    .filter((email): email is string => Boolean(email))
-
-  const canDraftEmail = selectedEmails.length > 0
-  const subjectBase =
-    output.projectTitle || output.jobDescription.split('\n')[0]?.trim() || 'New mission'
-  const mailtoHref = `mailto:${selectedEmails
-    .map((email) => encodeURIComponent(email))
-    .join(',')}?subject=${encodeURIComponent(`Team assignment: ${subjectBase}`)}`
 
   useEffect(() => {
     function isOverZone(
@@ -135,10 +123,6 @@ export function TeamScorecard({
     if (selectedIds.includes(profileId)) {
       return
     }
-    if (selectedIds.length >= output.requiredTeamSize) {
-      onSelectedIdsChange([...selectedIds.slice(1), profileId])
-      return
-    }
     onSelectedIdsChange([...selectedIds, profileId])
   }
 
@@ -162,9 +146,6 @@ export function TeamScorecard({
             or clicking their buttons.
           </TooltipContent>
         </Tooltip>
-        <p className="text-sm text-muted-foreground">
-          Recommended team size: {output.requiredTeamSize}
-        </p>
       </CardHeader>
       <CardContent className="grid gap-5">
         <section
@@ -179,7 +160,7 @@ export function TeamScorecard({
               No players selected. Drag from the bench or click add.
             </p>
           ) : (
-            <div className="grid justify-start gap-5 [grid-template-columns:repeat(auto-fit,minmax(10rem,10rem))]">
+            <div className="grid justify-start gap-x-2 gap-y-1 [grid-template-columns:repeat(auto-fit,minmax(10rem,10rem))]">
               {selectedProfiles.map((profile) => (
                 <PlayerCard
                   key={profile.id}
@@ -208,7 +189,7 @@ export function TeamScorecard({
               Everyone is currently selected.
             </p>
           ) : (
-            <div className="grid justify-start gap-1 [grid-template-columns:repeat(auto-fit,minmax(10rem,10rem))]">
+            <div className="grid justify-start gap-x-2 gap-y-1 [grid-template-columns:repeat(auto-fit,minmax(10rem,10rem))]">
               {benchProfiles.map((profile) => (
                 <PlayerCard
                   key={profile.id}
@@ -226,23 +207,7 @@ export function TeamScorecard({
           )}
         </section>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <Button
-            type="button"
-            disabled={!canDraftEmail}
-            onClick={() => {
-              window.location.href = mailtoHref
-            }}
-          >
-            <Mail className="size-4" />
-            Start Huddle
-          </Button>
-          {!canDraftEmail ? (
-            <p className="text-sm text-muted-foreground">
-              At least one selected employee needs an email on their profile.
-            </p>
-          ) : null}
-        </div>
+        <TeamBuilderEmail output={output} selectedIds={selectedIds} />
       </CardContent>
     </Card>
   )
