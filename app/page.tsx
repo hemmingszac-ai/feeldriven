@@ -1,45 +1,11 @@
-import Link from 'next/link'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { buttonVariants } from '@/components/ui/button'
+import { redirect } from 'next/navigation'
+import { createClient } from './lib/supabase/server'
 
-export default function HomePage() {
-  return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl items-center px-4 py-12">
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="text-4xl font-semibold tracking-normal md:text-5xl">
-            FeelDriven
-          </CardTitle>
-          <CardDescription className="max-w-3xl text-base leading-7">
-            A workplace platform that makes work feel like being part of a
-            high-performing team. Leaders turn tasks into shared missions, while
-            live progress, recognition, and rewards make employees genuinely want
-            to contribute and win together.
-          </CardDescription>
-        </CardHeader>
+export default async function HomePage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-        <CardContent className="grid gap-6 pt-6">
-          <ul className="grid gap-2 text-sm text-muted-foreground">
-            <li>Next.js App Router scaffold</li>
-            <li>TypeScript support</li>
-            <li>Responsive shadcn/ui primitives</li>
-            <li>Supabase email and password auth</li>
-          </ul>
-        </CardContent>
-
-        <CardFooter>
-          <Link href="/login" className={buttonVariants()}>
-            Log in or create an account
-          </Link>
-        </CardFooter>
-      </Card>
-    </main>
-  )
+  redirect(user ? '/shout-outs' : '/login')
 }

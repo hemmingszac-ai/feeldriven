@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/card'
 
 type ProfileHeroProps = {
-  eyebrow: string
   name: string
   initials: string
   meta?: ReactNode
@@ -40,7 +39,6 @@ type ProfileListCardProps = {
 }
 
 export function ProfileHero({
-  eyebrow,
   name,
   initials,
   meta,
@@ -54,7 +52,6 @@ export function ProfileHero({
             {initials}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-muted-foreground">{eyebrow}</p>
             <h1 className="mt-1 truncate text-3xl font-semibold tracking-normal">
               {name}
             </h1>

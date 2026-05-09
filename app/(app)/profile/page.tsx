@@ -35,7 +35,6 @@ export default async function ProfilePage() {
   return (
     <div className="grid gap-6">
       <ProfileHero
-        eyebrow="FeelDriven profile"
         name={userName}
         initials={getProfileInitials(profile)}
         meta={
@@ -74,7 +73,7 @@ export default async function ProfilePage() {
           {
             title: 'Skills to develop',
             description:
-              'Growth areas FeelDriven can use when shaping missions.',
+              'Growth areas we can use when shaping missions.',
             items: profile.skills_to_develop,
             emptyMessage: 'Nothing recorded yet.',
           },
