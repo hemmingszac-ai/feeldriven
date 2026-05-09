@@ -10,3 +10,12 @@ test('sidebar exposes shout-outs navigation', async () => {
   assert.match(source, /href:\s*'\/shout-outs'/)
   assert.match(source, /label:\s*'Shout-outs'/)
 })
+
+test('sidebar exposes team navigation', async () => {
+  const source = await readFile(new URL('./app-shell.tsx', import.meta.url), 'utf8')
+
+  assert.match(source, /'team'/)
+  assert.match(source, /id:\s*'team'/)
+  assert.match(source, /href:\s*'\/team'/)
+  assert.match(source, /label:\s*'Team'/)
+})

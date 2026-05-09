@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BarChart3, LogOut, Megaphone, UserRound } from 'lucide-react'
+import { BarChart3, LogOut, Megaphone, UserRound, UsersRound } from 'lucide-react'
 import { signout } from '@/app/auth/actions'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/sidebar'
 
 type AppShellProps = {
-  active: 'dashboard' | 'profile' | 'shout-outs'
+  active: 'dashboard' | 'profile' | 'shout-outs' | 'team'
   children: React.ReactNode
   userEmail?: string | null
   userName: string
@@ -45,6 +45,12 @@ const navItems = [
     href: '/shout-outs',
     label: 'Shout-outs',
     icon: Megaphone,
+  },
+  {
+    id: 'team',
+    href: '/team',
+    label: 'Team',
+    icon: UsersRound,
   },
 ] as const
 
