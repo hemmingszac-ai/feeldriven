@@ -5,7 +5,12 @@ import { Mail } from 'lucide-react'
 import type { TeamBuilderOutput, TeamBuilderProfile } from './types'
 import { PlayerCard } from './player-card'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 type DragSource = {
   profileId: string
@@ -14,12 +19,15 @@ type DragSource = {
 
 type TeamScorecardProps = {
   output: TeamBuilderOutput
+  selectedIds: string[]
+  onSelectedIdsChange: (selectedIds: string[]) => void
 }
 
-export function TeamScorecard({ output }: TeamScorecardProps) {
-  const [selectedIds, setSelectedIds] = useState(() =>
-    output.profileIds.filter((id) => output.profiles.some((profile) => profile.id === id)),
-  )
+export function TeamScorecard({
+  output,
+  selectedIds,
+  onSelectedIdsChange,
+}: TeamScorecardProps) {
   const [dragSource, setDragSource] = useState<DragSource | null>(null)
   const [activeDropZone, setActiveDropZone] = useState<'selected' | 'bench' | null>(null)
 
@@ -45,19 +53,18 @@ export function TeamScorecard({ output }: TeamScorecardProps) {
     .join(',')}?subject=${encodeURIComponent(`Team assignment: ${subjectBase}`)}`
 
   function removeFromSelected(profileId: string) {
-    setSelectedIds((current) => current.filter((id) => id !== profileId))
+    onSelectedIdsChange(selectedIds.filter((id) => id !== profileId))
   }
 
   function addToSelected(profileId: string) {
-    setSelectedIds((current) => {
-      if (current.includes(profileId)) {
-        return current
-      }
-      if (current.length >= output.requiredTeamSize) {
-        return [...current.slice(1), profileId]
-      }
-      return [...current, profileId]
-    })
+    if (selectedIds.includes(profileId)) {
+      return
+    }
+    if (selectedIds.length >= output.requiredTeamSize) {
+      onSelectedIdsChange([...selectedIds.slice(1), profileId])
+      return
+    }
+    onSelectedIdsChange([...selectedIds, profileId])
   }
 
   function startDrag(profileId: string, from: 'selected' | 'bench') {
@@ -94,11 +101,19 @@ export function TeamScorecard({ output }: TeamScorecardProps) {
   return (
     <Card className="mt-6 border-primary/20 bg-gradient-to-b from-primary/5 to-background">
       <CardHeader className="gap-2">
-        <CardTitle>Team Scorecard</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Build your lineup by dragging cards between selected team and bench.
-          Click buttons on cards for a keyboard-friendly fallback.
-        </p>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <h2 className="font-heading text-base font-medium leading-snug cursor-help w-fit">
+                Your Dream Team
+              </h2>
+            }
+          />
+          <TooltipContent>
+            Build your lineup by dragging cards between selected team and bench
+            or clicking their buttons.
+          </TooltipContent>
+        </Tooltip>
         <p className="text-sm text-muted-foreground">
           Recommended team size: {output.requiredTeamSize}
         </p>
