@@ -31,9 +31,9 @@ const navItems = [
     icon: Megaphone,
   },
   {
-    id: 'team',
-    href: '/team',
-    label: 'Team',
+    id: 'organization',
+    href: '/organization',
+    label: 'Organization',
     icon: UsersRound,
   },
 ] as const

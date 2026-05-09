@@ -6,8 +6,19 @@ export type ShoutOut = {
   created_at: string
 }
 
-export function normalizeShoutOuts(
-  shoutOuts: ShoutOut[] | null | undefined
+export type ShoutOutProfile = {
+  id: string
+  first_name: string
+  last_name: string
+}
+
+export type ShoutOutWithProfiles = ShoutOut & {
+  sender: ShoutOutProfile | null
+  recipient: ShoutOutProfile | null
+}
+
+export function normalizeShoutOuts<TShoutOut extends ShoutOut>(
+  shoutOuts: TShoutOut[] | null | undefined
 ) {
   return shoutOuts ?? []
 }

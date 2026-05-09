@@ -1,14 +1,8 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import {
-  ArrowLeft,
-  CalendarDays,
-  Sparkles,
-  Target,
-  UserRound,
-} from 'lucide-react'
+import { ArrowLeft, Sparkles, Target } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
-import { getTeamProfileName, type TeamProfile } from '../search'
+import { getOrganizationProfileName, type OrganizationProfile } from '../search'
 import { buttonVariants } from '@/components/ui/button'
 import {
   Card,
@@ -18,22 +12,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-type TeamMemberPageProps = {
+type OrganizationMemberPageProps = {
   params: {
     id: string
   }
-}
-
-function formatDate(value: string | null) {
-  if (!value) {
-    return 'Not recorded'
-  }
-
-  return new Intl.DateTimeFormat('en', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(new Date(value))
 }
 
 function PillList({ items }: { items: string[] }) {
@@ -55,32 +37,32 @@ function PillList({ items }: { items: string[] }) {
   )
 }
 
-export default async function TeamMemberPage({ params }: TeamMemberPageProps) {
+export default async function OrganizationMemberPage({ params }: OrganizationMemberPageProps) {
   const { supabase } = await getCurrentUserProfile()
 
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select(
-      'id, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects, created_at, updated_at'
+      'id, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects'
     )
     .eq('id', params.id)
-    .maybeSingle<TeamProfile>()
+    .maybeSingle<OrganizationProfile>()
 
   if (profileError || !profile) {
     notFound()
   }
 
-  const profileName = getTeamProfileName(profile)
+  const profileName = getOrganizationProfileName(profile)
 
   return (
     <div className="grid gap-6">
       <div>
         <Link
-          href="/team"
+          href="/organization"
           className={buttonVariants({ variant: 'outline', size: 'sm' })}
         >
           <ArrowLeft className="size-4" />
-          Back to team
+          Back to organization
         </Link>
       </div>
 
@@ -103,7 +85,7 @@ export default async function TeamMemberPage({ params }: TeamMemberPageProps) {
           <CardHeader>
             <CardTitle>Skills to develop</CardTitle>
             <CardDescription>
-              Growth areas this teammate has identified.
+              Growth areas this organization member has identified.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -131,7 +113,7 @@ export default async function TeamMemberPage({ params }: TeamMemberPageProps) {
             Growth direction
           </CardTitle>
           <CardDescription>
-            Projects that should stretch this teammate in a good way.
+            Projects that should stretch this organization member in a good way.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -141,7 +123,7 @@ export default async function TeamMemberPage({ params }: TeamMemberPageProps) {
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -151,37 +133,7 @@ export default async function TeamMemberPage({ params }: TeamMemberPageProps) {
             <CardDescription>Preferred contribution styles.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-semibold">
-              {profile.enjoyable_work.length}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CalendarDays className="size-4" />
-              Updated
-            </CardTitle>
-            <CardDescription>Latest profile refresh.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">
-              {formatDate(profile.updated_at)}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <UserRound className="size-4" />
-              Created
-            </CardTitle>
-            <CardDescription>Profile creation date.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold">
-              {formatDate(profile.created_at)}
-            </p>
+            <PillList items={profile.enjoyable_work} />
           </CardContent>
         </Card>
       </div>

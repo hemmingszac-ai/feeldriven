@@ -10,8 +10,6 @@ export type CurrentProfile = {
   skills_to_develop: string[]
   enjoyable_work: string[]
   stretch_projects: string
-  created_at: string | null
-  updated_at: string | null
 }
 
 export const getCurrentUserProfile = cache(async () => {
@@ -27,7 +25,7 @@ export const getCurrentUserProfile = cache(async () => {
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select(
-      'id, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects, created_at, updated_at'
+      'id, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects'
     )
     .eq('id', user.id)
     .maybeSingle<CurrentProfile>()
