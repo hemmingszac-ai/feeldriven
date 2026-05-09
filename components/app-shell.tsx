@@ -65,7 +65,7 @@ export function AppShell({
                     </div>
                     <div className="grid min-w-0 flex-1 text-left leading-tight">
                       <span className="truncate font-medium">{userName}</span>
-                      <span className="truncate text-xs text-muted-foreground">
+                      <span className="truncate text-xs text-white">
                         {userEmail}
                       </span>
                     </div>
