@@ -3,7 +3,10 @@ import { signout } from '@/app/auth/actions'
 import { getNameInitials } from '@/app/lib/profiles'
 import { AppNav } from '@/components/app-nav'
 import { SidebarLogoTrigger } from '@/components/sidebar-logo-trigger'
-import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import {
   Sidebar,
@@ -53,33 +56,39 @@ export function AppShell({
           <SidebarFooter>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton size="lg" tooltip={userName}>
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-xs font-semibold text-foreground ring-1 ring-primary/20">
-                    {getNameInitials(userName)}
-                  </div>
-                  <div className="grid min-w-0 flex-1 text-left leading-tight">
-                    <span className="truncate font-medium">{userName}</span>
-                    <span className="truncate text-xs text-muted-foreground">
-                      {userEmail}
-                    </span>
-                  </div>
-                </SidebarMenuButton>
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    render={<SidebarMenuButton size="lg" tooltip={userName} />}
+                  >
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white text-xs font-semibold text-primary ring-1 ring-white/40">
+                      {getNameInitials(userName)}
+                    </div>
+                    <div className="grid min-w-0 flex-1 text-left leading-tight">
+                      <span className="truncate font-medium">{userName}</span>
+                      <span className="truncate text-xs text-muted-foreground">
+                        {userEmail}
+                      </span>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    side="top"
+                    className="min-w-56"
+                  >
+                    <form action={signout}>
+                      <DropdownMenuItem
+                        nativeButton
+                        variant="destructive"
+                        render={<button type="submit" className="w-full" />}
+                      >
+                        <LogOut className="size-4" />
+                        <span>Sign out</span>
+                      </DropdownMenuItem>
+                    </form>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </SidebarMenuItem>
             </SidebarMenu>
-
-            <form>
-              <Button
-                formAction={signout}
-                type="submit"
-                variant="outline"
-                className="w-full justify-start group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:px-0"
-              >
-                <LogOut className="size-4" />
-                <span className="group-data-[collapsible=icon]:hidden">
-                  Sign out
-                </span>
-              </Button>
-            </form>
           </SidebarFooter>
           <SidebarRail />
         </Sidebar>
