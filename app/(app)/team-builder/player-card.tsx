@@ -2,7 +2,7 @@
 
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import Link from 'next/link'
-import { GripVertical, Plus, X } from 'lucide-react'
+import { Check, GripVertical, Plus, X } from 'lucide-react'
 import type { TeamBuilderProfile } from './types'
 import { Button } from '@/components/ui/button'
 
@@ -31,7 +31,10 @@ export function PlayerCard({
   onRemove,
   onPointerDown,
 }: PlayerCardProps) {
-  const topTags = [...profile.enjoyableWork, ...profile.skillsToDevelop].slice(0, 2)
+  const attributeRows = [
+    ...profile.enjoyableWork,
+    ...profile.skillsToDevelop,
+  ].slice(0, 3)
   const profileHref = `/organization/${profile.id}`
 
   return (
@@ -46,77 +49,82 @@ export function PlayerCard({
         onPointerDown(profile.id, selected ? 'selected' : 'bench', event)
       }}
       data-dragging={dragging ? 'true' : 'false'}
-      className={`group relative min-h-44 cursor-grab select-none touch-none active:cursor-grabbing rounded-xl border p-3 shadow-sm transition ${
+      className={`team-builder-player-card group relative aspect-[4/6] w-full max-w-40 cursor-grab select-none touch-none overflow-hidden active:cursor-grabbing rounded-xl border-2 p-1.5 shadow-sm transition ${
         selected
-          ? 'border-primary/40 bg-gradient-to-b from-primary/15 via-background to-background'
-          : 'border-border/60 bg-gradient-to-b from-secondary/20 to-background'
+          ? 'border-primary/60 bg-gradient-to-b from-primary/15 via-background to-background'
+          : 'border-border/80 bg-gradient-to-b from-secondary/20 to-background'
       } ${highlight ? 'ring-2 ring-primary/35' : ''} ${dragging ? 'cursor-grabbing opacity-90' : ''}`}
     >
-      <div className="absolute right-2 top-2 flex items-center gap-1.5">
+      <div className="absolute right-1.5 top-1.5 flex items-center gap-1">
         {typeof rank === 'number' ? (
-          <span className="inline-flex h-5 items-center rounded-md border border-border/70 bg-background px-1.5 text-[11px] font-semibold">
+          <span className="inline-flex h-5 items-center rounded-md border border-border/70 bg-background px-1.5 text-[10px] font-semibold text-foreground">
             #{rank + 1}
           </span>
         ) : null}
-        <GripVertical className="size-3.5 text-muted-foreground" />
+        {selected ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-xs"
+            className="size-6"
+            onClick={() => onRemove(profile.id)}
+            aria-label={`Remove ${profile.name}`}
+          >
+            <X className="size-3.5" />
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-xs"
+            className="size-6"
+            onClick={() => onAdd(profile.id)}
+            aria-label={`Add ${profile.name}`}
+          >
+            <Plus className="size-3.5" />
+          </Button>
+        )}
       </div>
 
-      <div className="grid h-full gap-2.5 pt-5">
-        <div>
-          <h3 className="truncate text-base font-semibold">
+      <div className="grid h-full min-h-0 gap-1 pt-6">
+        <div className="grid gap-0">
+          <h3 className="grid text-[1.3rem] font-semibold leading-none">
             <Link
               href={profileHref}
-              className="truncate font-semibold text-primary underline-offset-4 transition hover:underline"
+              className="block truncate font-semibold text-primary underline-offset-4 transition hover:underline"
             >
-              {profile.name}
+              {profile.name.split(' ').map((part, index) => (
+                <span key={`${profile.id}-${part}-${index}`} className="block truncate">
+                  {part}
+                </span>
+              ))}
             </Link>
           </h3>
-          <p className="truncate text-xs text-muted-foreground">
-            {profile.email ?? 'No work email on profile'}
-          </p>
         </div>
 
-        <div className="flex flex-wrap gap-1">
-          {topTags.length ? (
-            topTags.map((tag) => (
-              <span
-                key={`${profile.id}-${tag}`}
-                className="inline-flex h-5 items-center rounded-md border border-border/70 bg-background px-1.5 text-[10px]"
-              >
-                {tag}
-              </span>
-            ))
-          ) : (
-            <span className="inline-flex h-5 items-center rounded-md border border-border/70 bg-background px-1.5 text-[10px]">
-              General contributor
-            </span>
-          )}
+        <div className="grid min-h-0 gap-0 overflow-hidden">
+          <div className="grid gap-0.5 overflow-hidden">
+            {attributeRows.length ? (
+              attributeRows.map((tag) => (
+                <div
+                  key={`${profile.id}-${tag}`}
+                  className="flex items-start gap-1 overflow-hidden text-[11px] leading-tight text-foreground"
+                >
+                  <Check className="mt-0.5 size-3 shrink-0 text-success" />
+                  <span className="truncate">{tag}</span>
+                </div>
+              ))
+            ) : (
+              <div className="flex items-start gap-1 text-[11px] leading-tight text-foreground">
+                <Check className="mt-0.5 size-3 shrink-0 text-success" />
+                <span>General contributor</span>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="mt-auto pt-0.5">
-          {selected ? (
-            <Button
-              type="button"
-              variant="outline"
-              size="xs"
-              className="w-full"
-              onClick={() => onRemove(profile.id)}
-            >
-              <X className="size-3.5" />
-              Remove
-            </Button>
-          ) : (
-            <Button
-              type="button"
-              variant="outline"
-              size="xs"
-              className="w-full"
-              onClick={() => onAdd(profile.id)}
-            >
-              <Plus className="size-3.5" />
-              Add
-            </Button>
-          )}
+        <div className="mt-auto flex items-end justify-end pt-0.5">
+          <GripVertical className="size-3 text-muted-foreground" />
         </div>
       </div>
     </article>

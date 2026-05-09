@@ -191,3 +191,9 @@
     cursor: grabbing !important;
   }
 }
+
+@layer utilities {
+  .team-builder-player-card.p-1\.5 {
+    padding: calc(var(--spacing) * 3.5);
+  }
+}

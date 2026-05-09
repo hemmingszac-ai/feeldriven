@@ -53,6 +53,7 @@ export function TeamScorecard({
     .filter((profile): profile is TeamBuilderProfile => Boolean(profile))
 
   const benchProfiles = output.profiles.filter((profile) => !selectedIds.includes(profile.id))
+  const showDropZones = Boolean(dragSource)
   const selectedEmails = selectedProfiles
     .map((profile) => profile.email?.trim())
     .filter((email): email is string => Boolean(email))
@@ -168,7 +169,7 @@ export function TeamScorecard({
       <CardContent className="grid gap-5">
         <section
           ref={selectedZoneRef}
-          className={`grid gap-3 rounded-xl border p-3 ${activeDropZone === 'selected' ? 'border-primary ring-2 ring-primary/20' : 'border-border/70'
+          className={`grid gap-3 rounded-xl border p-4 transition-colors ${showDropZones ? (activeDropZone === 'selected' ? 'border-primary ring-2 ring-primary/20' : 'border-border/70') : 'border-transparent'
             }`}
           aria-label="Selected team lineup"
         >
@@ -178,7 +179,7 @@ export function TeamScorecard({
               No players selected. Drag from the bench or click add.
             </p>
           ) : (
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid justify-start gap-5 [grid-template-columns:repeat(auto-fit,minmax(10rem,10rem))]">
               {selectedProfiles.map((profile) => (
                 <PlayerCard
                   key={profile.id}
@@ -197,7 +198,7 @@ export function TeamScorecard({
 
         <section
           ref={benchZoneRef}
-          className={`grid gap-3 rounded-xl border p-3 ${activeDropZone === 'bench' ? 'border-primary ring-2 ring-primary/20' : 'border-border/70'
+          className={`grid gap-3 rounded-xl border p-4 transition-colors ${showDropZones ? (activeDropZone === 'bench' ? 'border-primary ring-2 ring-primary/20' : 'border-border/70') : 'border-transparent'
             }`}
           aria-label="Available bench players"
         >
@@ -207,7 +208,7 @@ export function TeamScorecard({
               Everyone is currently selected.
             </p>
           ) : (
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid justify-start gap-1 [grid-template-columns:repeat(auto-fit,minmax(10rem,10rem))]">
               {benchProfiles.map((profile) => (
                 <PlayerCard
                   key={profile.id}
@@ -234,7 +235,7 @@ export function TeamScorecard({
             }}
           >
             <Mail className="size-4" />
-            Draft Email
+            Start Huddle
           </Button>
           {!canDraftEmail ? (
             <p className="text-sm text-muted-foreground">
