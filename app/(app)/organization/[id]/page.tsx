@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, Brain, Sparkles } from 'lucide-react'
+import { ArrowLeft, Brain, BriefcaseBusiness, Sparkles } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
 import { getProfileInitials } from '@/app/lib/profiles'
 import { getOrganizationProfileName, type OrganizationProfile } from '../search'
@@ -32,7 +32,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
     supabase
       .from('profiles')
       .select(
-        'id, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects'
+        'id, first_name, last_name, role, skills_to_develop, enjoyable_work, stretch_projects'
       )
       .eq('id', params.id)
       .maybeSingle<OrganizationProfile>(),
@@ -55,6 +55,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
   }
 
   const profileName = getOrganizationProfileName(profile)
+  const role = profile.role ?? 'Role not set'
   const skillCount = profile.skills_to_develop.length
   const workModeCount = profile.enjoyable_work.length
 
@@ -63,6 +64,12 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
       <ProfileHero
         name={profileName}
         initials={getProfileInitials(profile)}
+        meta={
+          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+            <BriefcaseBusiness className="size-4 shrink-0" />
+            <span className="truncate">{role}</span>
+          </p>
+        }
         action={
           <Link
             href="/organization"

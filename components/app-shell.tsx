@@ -23,14 +23,14 @@ type AppShellProps = {
   children: React.ReactNode
   userEmail?: string | null
   userName: string
-  userRole?: string | null
+  isManager: boolean
 }
 
 export function AppShell({
   children,
   userEmail,
   userName,
-  userRole,
+  isManager,
 }: AppShellProps) {
   return (
     <TooltipProvider>
@@ -45,7 +45,7 @@ export function AppShell({
           </SidebarHeader>
 
           <SidebarContent>
-            <AppNav userRole={userRole} />
+            <AppNav isManager={isManager} />
           </SidebarContent>
 
           <SidebarSeparator />

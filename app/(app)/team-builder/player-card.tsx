@@ -2,7 +2,7 @@
 
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import Link from 'next/link'
-import { Check, GripVertical, Plus, X } from 'lucide-react'
+import { BriefcaseBusiness, Check, GripVertical, Plus, X } from 'lucide-react'
 import type { TeamBuilderProfile } from './types'
 import { Button } from '@/components/ui/button'
 
@@ -107,7 +107,7 @@ export function PlayerCard({
       </div>
 
       <div className="grid h-full min-h-0 gap-1 pt-6">
-        <div className="grid gap-0">
+        <div className="grid gap-1">
           <h3 className="grid text-[1.3rem] font-semibold leading-none">
             <Link
               href={profileHref}
@@ -120,6 +120,12 @@ export function PlayerCard({
               ))}
             </Link>
           </h3>
+          {profile.role ? (
+            <p className="flex items-center gap-1 text-[10px] leading-tight text-muted-foreground">
+              <BriefcaseBusiness className="size-3 shrink-0" />
+              <span className="truncate">{profile.role}</span>
+            </p>
+          ) : null}
         </div>
 
         <div className="grid min-h-0 gap-0 overflow-hidden">

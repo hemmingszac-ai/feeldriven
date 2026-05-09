@@ -3,8 +3,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '../../lib/supabase/server'
 
-const roles = ['Team Manager', 'Team Member'] as const
-
 function cleanList(values: FormDataEntryValue[]) {
   return Array.from(
     new Set(
@@ -32,6 +30,7 @@ export async function createProfile(formData: FormData) {
   const firstName = formData.get('firstName')?.toString().trim() ?? ''
   const lastName = formData.get('lastName')?.toString().trim() ?? ''
   const role = formData.get('role')?.toString().trim() ?? ''
+  const isManager = formData.get('isManager') === 'on'
   const skillsToDevelop = cleanList(formData.getAll('skillsToDevelop'))
   const enjoyableWork = cleanList(formData.getAll('enjoyableWork'))
   const stretchProjects =
@@ -41,8 +40,8 @@ export async function createProfile(formData: FormData) {
     fail('Please enter your first and last name.')
   }
 
-  if (!roles.includes(role as (typeof roles)[number])) {
-    fail('Please choose your role.')
+  if (!role) {
+    fail('Please enter your role.')
   }
 
   if (skillsToDevelop.length === 0) {
@@ -65,6 +64,7 @@ export async function createProfile(formData: FormData) {
         email: user.email,
         first_name: firstName,
         last_name: lastName,
+        role,
         skills_to_develop: skillsToDevelop,
         enjoyable_work: enjoyableWork,
         stretch_projects: stretchProjects,
@@ -80,7 +80,8 @@ export async function createProfile(formData: FormData) {
 
   const { error: userError } = await supabase.auth.updateUser({
     data: {
-      role,
+      isManager,
+      role: null,
     },
   })
 

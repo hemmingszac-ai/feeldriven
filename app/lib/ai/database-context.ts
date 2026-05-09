@@ -14,7 +14,7 @@ export async function loadAiDatabaseContext() {
   const [profilesResult, shoutOutsResult] = await Promise.all([
     supabase
       .from('profiles')
-      .select('id, email, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects')
+      .select('id, email, first_name, last_name, role, skills_to_develop, enjoyable_work, stretch_projects')
       .order('first_name', { ascending: true })
       .order('last_name', { ascending: true }),
     supabase

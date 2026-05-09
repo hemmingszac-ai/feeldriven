@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { createProfile } from './actions'
-import { skillOptions, workTypeOptions } from './profile-options'
+import { roleOptions, skillOptions, workTypeOptions } from './profile-options'
 import { Button } from '@/components/ui/button'
 import {
   Combobox,
@@ -18,6 +18,10 @@ import {
 } from '@/components/ui/combobox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from '@/components/ui/native-select'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 
@@ -101,28 +105,43 @@ export function ProfileSetupForm({ error }: ProfileSetupFormProps) {
         </div>
       </div>
 
-      <fieldset className="grid gap-2">
-        <legend className="text-sm font-medium">Role</legend>
-        <div className="grid gap-2 sm:grid-cols-2">
-          {['Team Manager', 'Team Member'].map((role) => (
-            <label
-              key={role}
-              className="group flex cursor-pointer items-center gap-2 rounded-lg border border-input px-3 py-2 text-sm transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5"
-            >
-              <input
-                type="radio"
-                name="role"
-                value={role}
-                required
-                className={cn(
-                  "size-4 rounded-full border border-input accent-primary"
-                )}
-              />
+      <div className="grid gap-2">
+        <Label htmlFor="role">Role</Label>
+        <NativeSelect
+          id="role"
+          name="role"
+          required
+          defaultValue=""
+          className="w-full"
+        >
+          <NativeSelectOption value="" disabled>
+            Select a job title
+          </NativeSelectOption>
+          {roleOptions.map((role) => (
+            <NativeSelectOption key={role} value={role}>
               {role}
-            </label>
+            </NativeSelectOption>
           ))}
-        </div>
-      </fieldset>
+        </NativeSelect>
+      </div>
+
+      <div className="grid gap-2">
+        <Label htmlFor="isManager">Are you a manager?</Label>
+        <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-input px-3 py-3 text-sm transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+          <input
+            id="isManager"
+            type="checkbox"
+            name="isManager"
+            className={cn("mt-0.5 size-4 rounded border border-input accent-primary")}
+          />
+          <div className="grid gap-1">
+            <span className="font-medium text-foreground">I manage a team</span>
+            <span className="text-muted-foreground">
+              Enable manager access, including Team Builder.
+            </span>
+          </div>
+        </label>
+      </div>
 
       <MultiComboboxField
         label="What skills do you want to develop?"
