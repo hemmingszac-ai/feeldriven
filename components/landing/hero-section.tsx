@@ -43,7 +43,7 @@ export function HeroSection() {
         {/* Main headline */}
         <div className="mb-12">
           <h1
-            className={`text-[clamp(3rem,11vw,9rem)] font-semibold leading-[0.92] tracking-tight transition-all duration-1000 ${
+            className={`text-[clamp(3rem,11vw,9rem)] font-extrabold leading-[0.86] tracking-tight transition-all duration-1000 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
@@ -60,7 +60,7 @@ export function HeroSection() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            TeamHuddl helps managers assemble high performing teams then kicks
+            teamhuddle helps managers assemble high performing teams then kicks
             things off instantly.
           </p>
 

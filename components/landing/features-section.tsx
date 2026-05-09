@@ -6,12 +6,12 @@ const features = [
   {
     number: "01",
     title: "AI team assembly",
-    description: "TeamHuddl cross-references strength profiles, behavioural patterns, and collaboration history across your entire organisation — identifying team combinations no human could replicate at scale.",
+    description: "teamhuddle cross-references strength profiles, behavioural patterns, and collaboration history across your entire organisation — identifying team combinations no human could replicate at scale.",
     visual: "ai",
   },
   {
     number: "02",
-    title: "The Huddl",
+    title: "The Huddle",
     description: "One click creates a project email thread with every team member included, an AI-written kickoff briefing, clear role expectations, and a subject line tied to the project.",
     visual: "collab",
   },

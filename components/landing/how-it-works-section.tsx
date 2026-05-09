@@ -12,7 +12,7 @@ const steps = [
   {
     number: "II",
     title: "AI scans the org",
-    description: "TeamHuddl cross-references every employee's strength profile, team role, and collaboration history in seconds.",
+    description: "teamhuddle cross-references every employee's strength profile, team role, and collaboration history in seconds.",
     visibleCards: 2,
   },
   {
@@ -23,7 +23,7 @@ const steps = [
   },
   {
     number: "IV",
-    title: "Send the Huddl",
+    title: "Send the Huddle",
     description: "One click creates the kickoff email thread with everyone included — AI-written brief, project title, role expectations.",
     visibleCards: 4,
   },
@@ -199,7 +199,7 @@ export function HowItWorksSection() {
                 </div>
                 <div className="flex-1 mx-4">
                   <div className="h-5 rounded bg-gray-100 text-[10px] font-mono text-gray-400 flex items-center px-3">
-                    teamhuddl.app / team-builder
+                    teamhuddle.app / team-builder
                   </div>
                 </div>
               </div>

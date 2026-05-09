@@ -31,21 +31,21 @@ export function SidebarLogoTrigger({
     >
       <div className="flex size-8 shrink-0 items-center justify-center rounded-md">
         <Image
-          src="/logos/iconlogo.svg"
+          src="/logo-icon.svg"
           alt=""
           width={32}
-          height={28}
-          className="h-7 w-8 object-contain"
+          height={32}
+          className="size-8 object-contain"
           priority
         />
       </div>
       {!mobileFloating ? (
-        <div className="flex min-w-0 flex-1 items-center group-data-[collapsible=icon]:hidden">
+        <div className="flex min-w-0 flex-1 items-center gap-2 group-data-[collapsible=icon]:hidden">
           <Image
-            src="/logos/longlogo.svg"
-            alt="feeldriven.com"
-            width={166}
-            height={28}
+            src="/logo-wordmark.svg"
+            alt="teamhuddle"
+            width={152}
+            height={34}
             className="h-7 w-auto object-contain"
             priority
           />

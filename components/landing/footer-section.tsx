@@ -41,7 +41,7 @@ export function FooterSection() {
               <a href="#" className="inline-block mb-6">
                 <img
                   src="/logo.svg"
-                  alt="TeamHuddl"
+                  alt="teamhuddle"
                   style={{ height: "36px", width: "auto" }}
                 />
               </a>
@@ -94,7 +94,7 @@ export function FooterSection() {
         {/* Bottom Bar */}
         <div className="py-8 border-t border-foreground/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            2025 TeamHuddl. All rights reserved.
+            2025 teamhuddle. All rights reserved.
           </p>
 
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
