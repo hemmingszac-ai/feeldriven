@@ -47,7 +47,7 @@ export function Navigation() {
           <a href="#" className="flex items-center group shrink-0">
             <img
               src="/logo.svg"
-              alt="teamhuddle"
+              alt="teamhuddl"
               className="transition-all duration-500 object-contain w-auto"
               style={{ height: isScrolled ? "39px" : "53px" }}
             />

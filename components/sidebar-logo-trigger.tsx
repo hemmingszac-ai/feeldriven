@@ -43,7 +43,7 @@ export function SidebarLogoTrigger({
         <div className="flex min-w-0 flex-1 items-center gap-2 group-data-[collapsible=icon]:hidden">
           <Image
             src="/logo-wordmark.svg"
-            alt="teamhuddle"
+            alt="teamhuddl"
             width={152}
             height={34}
             className="h-7 w-auto object-contain"

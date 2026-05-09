@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'teamhuddle',
+  title: 'teamhuddl',
   description: 'AI-first productivity starter app for SaaSathon.',
   icons: {
     icon: '/logo-icon.svg',

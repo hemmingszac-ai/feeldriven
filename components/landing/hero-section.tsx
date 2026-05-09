@@ -60,7 +60,7 @@ export function HeroSection() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            teamhuddle helps managers assemble high performing teams then kicks
+            teamhuddl helps managers assemble high performing teams then kicks
             things off instantly.
           </p>
 

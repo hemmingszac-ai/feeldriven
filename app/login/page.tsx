@@ -23,7 +23,7 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
           <Link href="/">
             <img
               src="/logo.svg"
-              alt="teamhuddle"
+              alt="teamhuddl"
               style={{ height: '44px', width: 'auto' }}
             />
           </Link>
@@ -96,7 +96,7 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
         </div>
 
         <p className="mt-6 text-center text-xs text-white/50">
-          © 2026 teamhuddle
+          © 2026 teamhuddl
         </p>
       </div>
     </main>
