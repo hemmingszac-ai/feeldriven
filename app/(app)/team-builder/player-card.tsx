@@ -40,6 +40,10 @@ export function PlayerCard({
   return (
     <article
       onPointerDown={(event) => {
+        if (event.pointerType === 'touch') {
+          return
+        }
+
         const target = event.target as HTMLElement | null
         if (target?.closest('a,button,input,textarea,select,label')) {
           return
@@ -49,12 +53,28 @@ export function PlayerCard({
         onPointerDown(profile.id, selected ? 'selected' : 'bench', event)
       }}
       data-dragging={dragging ? 'true' : 'false'}
-      className={`team-builder-player-card group relative aspect-[4/6] w-full max-w-40 cursor-grab select-none touch-none overflow-hidden active:cursor-grabbing rounded-xl border-2 p-1.5 shadow-sm transition ${
+      className={`team-builder-player-card group relative aspect-[4/6] w-full max-w-40 cursor-grab select-none touch-pan-x overflow-hidden active:cursor-grabbing rounded-xl border-2 p-1.5 shadow-sm transition ${
         selected
           ? 'border-primary/60 bg-gradient-to-b from-primary/15 via-background to-background'
           : 'border-border/80 bg-gradient-to-b from-secondary/20 to-background'
       } ${highlight ? 'ring-2 ring-primary/35' : ''} ${dragging ? 'cursor-grabbing opacity-90' : ''}`}
     >
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon-xs"
+        className="absolute bottom-1.5 right-1.5 size-6 touch-none cursor-grab active:cursor-grabbing"
+        aria-label={`Drag ${profile.name}`}
+        title={`Drag ${profile.name}`}
+        onPointerDown={(event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          onPointerDown(profile.id, selected ? 'selected' : 'bench', event)
+        }}
+      >
+        <GripVertical className="size-3.5" />
+      </Button>
+
       <div className="absolute right-1.5 top-1.5 flex items-center gap-1">
         {typeof rank === 'number' ? (
           <span className="inline-flex h-5 items-center rounded-md border border-border/70 bg-background px-1.5 text-[10px] font-semibold text-foreground">
@@ -123,9 +143,7 @@ export function PlayerCard({
           </div>
         </div>
 
-        <div className="mt-auto flex items-end justify-end pt-0.5">
-          <GripVertical className="size-3 text-muted-foreground" />
-        </div>
+        <div className="mt-auto flex items-end justify-end pt-0.5" />
       </div>
     </article>
   )

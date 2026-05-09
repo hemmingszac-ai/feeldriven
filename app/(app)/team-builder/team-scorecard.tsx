@@ -1,6 +1,6 @@
 'use client'
 
-import type { RefObject } from 'react'
+import type { ReactNode, RefObject } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { TeamBuilderOutput, TeamBuilderProfile } from './types'
 import { PlayerCard } from './player-card'
@@ -87,6 +87,21 @@ export function TeamScorecard({
     output.profiles.filter((profile) => !selectedIds.includes(profile.id)),
   )
   const showDropZones = Boolean(dragSource)
+
+  function renderCardRow(
+    profiles: TeamBuilderProfile[],
+    renderCard: (profile: TeamBuilderProfile) => ReactNode,
+  ) {
+    return (
+      <div className="team-builder-scroll-row flex flex-nowrap gap-2 overflow-x-auto overflow-y-hidden pb-1">
+        {profiles.map((profile) => (
+          <div key={profile.id} className="w-40 shrink-0">
+            {renderCard(profile)}
+          </div>
+        ))}
+      </div>
+    )
+  }
 
   useEffect(() => {
     function isOverZone(
@@ -195,10 +210,8 @@ export function TeamScorecard({
               No players selected. Drag from the bench or click add.
             </p>
           ) : (
-            <div className="grid justify-start gap-x-2 gap-y-1 [grid-template-columns:repeat(auto-fit,minmax(10rem,10rem))]">
-              {selectedProfiles.map((profile) => (
+            renderCardRow(selectedProfiles, (profile) => (
                 <PlayerCard
-                  key={profile.id}
                   profile={profile}
                   selected
                   rank={recommendationRankByProfileId.get(profile.id)}
@@ -207,8 +220,7 @@ export function TeamScorecard({
                   onRemove={removeFromSelected}
                   onPointerDown={startDrag}
                 />
-              ))}
-            </div>
+            ))
           )}
         </section>
 
@@ -224,10 +236,8 @@ export function TeamScorecard({
               Everyone is currently selected.
             </p>
           ) : (
-            <div className="grid justify-start gap-x-2 gap-y-1 [grid-template-columns:repeat(auto-fit,minmax(10rem,10rem))]">
-              {benchProfiles.map((profile) => (
+            renderCardRow(benchProfiles, (profile) => (
                 <PlayerCard
-                  key={profile.id}
                   profile={profile}
                   selected={false}
                   rank={recommendationRankByProfileId.get(profile.id)}
@@ -237,8 +247,7 @@ export function TeamScorecard({
                   onRemove={removeFromSelected}
                   onPointerDown={startDrag}
                 />
-              ))}
-            </div>
+            ))
           )}
         </section>
 
