@@ -206,19 +206,24 @@ export function TeamScorecard({
   return (
     <Card className="mt-6 border-primary/20 bg-linear-to-b from-primary/5 to-background">
       <CardHeader className="gap-2">
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <h2 className="font-heading text-base font-medium leading-snug cursor-help w-fit">
-                Your Dream Team
-              </h2>
-            }
-          />
-          <TooltipContent>
-            Build your lineup by dragging cards between selected team and bench
-            or clicking their buttons.
-          </TooltipContent>
-        </Tooltip>
+        <div className="grid gap-1">
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <h2 className="font-heading text-base font-medium leading-snug cursor-help w-fit">
+                  Your Dream Team
+                </h2>
+              }
+            />
+            <TooltipContent>
+              Build your lineup by dragging cards between selected team and bench
+              or clicking their buttons.
+            </TooltipContent>
+          </Tooltip>
+          <p className="w-full text-sm leading-6 text-muted-foreground">
+            {output.selectionSummary}
+          </p>
+        </div>
       </CardHeader>
       <CardContent className="grid gap-5">
         <section

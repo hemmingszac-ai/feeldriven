@@ -25,7 +25,7 @@ const initialState: TeamBuilderFormState = {
   status: 'idle',
 }
 
-const TEAM_BUILDER_SESSION_KEY = 'team-builder-session-state-v2'
+const TEAM_BUILDER_SESSION_KEY = 'team-builder-session-state-v3'
 
 type TeamBuilderSessionState = {
   state: TeamBuilderFormState
@@ -85,7 +85,8 @@ function readTeamBuilderSessionState(): TeamBuilderSessionState | null {
       parsed?.state?.status === 'success' &&
       Array.isArray(parsed.selectedIds) &&
       parsed.state.output &&
-      'managerProfileId' in parsed.state.output
+      'managerProfileId' in parsed.state.output &&
+      typeof parsed.state.output.selectionSummary === 'string'
     ) {
       return {
         state: parsed.state,

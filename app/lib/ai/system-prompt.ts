@@ -5,7 +5,7 @@ export const DEFAULT_SYSTEM_PROMPT =
 Given a job (described below), first determine how many people are realistically required to deliver it well within the stated timeframe. Then identify the optimal team from the available workforce. Return the profile ids of the choosen team, in descending order of best fit.`;
 
 export const TEAM_BUILDER_EMAIL_PROMPT =
-  `Also draft a short email body for the selected team. It should briefly summarize the work, ask whether the recipients would be keen to get involved, and invite their thoughts.`;
+  `Also draft a short email body for the selected team. It should briefly summarise the work, lightly nod to why this group is a good fit, ask whether the recipients would be keen to get involved, and invite their thoughts. Keep the rationale natural and subtle, not like an evaluation report.`;
 
 export function resolveSystemPrompt(systemPrompt?: string) {
   return systemPrompt ?? DEFAULT_SYSTEM_PROMPT;

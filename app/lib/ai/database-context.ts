@@ -29,7 +29,6 @@ export async function loadAiDatabaseContext() {
         recipient:profiles!shout_outs_recipient_id_fkey(id, first_name, last_name)
       `)
       .order('created_at', { ascending: false })
-      .limit(2),
   ])
 
   if (profilesResult.error) {

@@ -33,13 +33,18 @@ const teamBuilderSchema = {
       description:
         'A very short subject summary for the job, ideally 2 to 5 words. Do not include any prefix, label, or greeting.',
     },
+    selectionSummary: {
+      type: 'string',
+      description:
+        'One to two concise sentences explaining why this team is a strong fit for the job, based on the brief, profile signals, and shout-out history.',
+    },
     emailBody: {
       type: 'string',
       description:
-        'A short email body that briefly describes the work and asks whether the recipients would be keen to help and share their thoughts.',
+        'A short email body that briefly describes the work, subtly nods to why this group is a good fit, and asks whether the recipients would be keen to help and share their thoughts.',
     },
   },
-  required: ['profileIds', 'subject', 'emailBody'],
+  required: ['profileIds', 'subject', 'selectionSummary', 'emailBody'],
   additionalProperties: false,
 }
 
@@ -162,7 +167,7 @@ export async function submitTeamBuilderInput(
     })
     const generatedOutput = result.output as Pick<
       TeamBuilderOutput,
-      'profileIds' | 'subject' | 'emailBody'
+      'profileIds' | 'subject' | 'selectionSummary' | 'emailBody'
     >
     const validProfileIds = new Set(profiles.map((profile) => profile.id))
     const recommendedProfileIds = Array.from(
