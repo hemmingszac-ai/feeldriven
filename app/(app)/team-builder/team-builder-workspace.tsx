@@ -36,7 +36,6 @@ function getOutputSignature(output: TeamBuilderOutput) {
   return [
     output.projectTitle,
     output.jobDescription,
-    output.requiredTeamSize,
     output.profileIds.join('|'),
   ].join('::')
 }

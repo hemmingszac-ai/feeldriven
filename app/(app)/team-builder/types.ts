@@ -9,11 +9,12 @@ export type TeamBuilderProfile = {
 
 export type TeamBuilderOutput = {
   profileIds: string[]
-  requiredTeamSize: number
-  rationale: string
+  subject: string
+  emailBody: string
   profiles: TeamBuilderProfile[]
   projectTitle: string
   jobDescription: string
+  emailComms: string
 }
 
 export type TeamBuilderFormState =

@@ -7,7 +7,10 @@ import {
   generateStructuredOutput,
   OpenRouterError,
 } from '@/app/lib/ai/openrouter'
-import { DEFAULT_SYSTEM_PROMPT } from '@/app/lib/ai/system-prompt'
+import {
+  DEFAULT_SYSTEM_PROMPT,
+  TEAM_BUILDER_EMAIL_PROMPT,
+} from '@/app/lib/ai/system-prompt'
 import { formatProfileName } from '@/app/lib/profiles'
 import type {
   TeamBuilderFormState,
@@ -24,16 +27,18 @@ const teamBuilderSchema = {
       description:
         'The selected team member profile ids, in descending order of best fit.',
     },
-    requiredTeamSize: {
-      type: 'number',
-      description: 'The recommended number of people required for the job.',
-    },
-    rationale: {
+    subject: {
       type: 'string',
-      description: 'A concise explanation of why this team was selected.',
+      description:
+        'A very short subject summary for the job, ideally 2 to 5 words. Do not include any prefix, label, or greeting.',
+    },
+    emailBody: {
+      type: 'string',
+      description:
+        'A short email body that briefly describes the work and asks whether the recipients would be keen to help and share their thoughts.',
     },
   },
-  required: ['profileIds', 'requiredTeamSize', 'rationale'],
+  required: ['profileIds', 'subject', 'emailBody'],
   additionalProperties: false,
 }
 
@@ -129,11 +134,10 @@ export async function submitTeamBuilderInput(
   try {
     const database = await loadAiDatabaseContext()
     const profiles = database.profiles.map(normalizeProfile)
-    const profileById = new Map(profiles.map((profile) => [profile.id, profile]))
 
     const result = await generateStructuredOutput({
       database,
-      systemPrompt: DEFAULT_SYSTEM_PROMPT,
+      systemPrompt: `${DEFAULT_SYSTEM_PROMPT}\n\n${TEAM_BUILDER_EMAIL_PROMPT}`,
       form: {
         emailComms,
         projectTitle,
@@ -149,13 +153,12 @@ export async function submitTeamBuilderInput(
       output: {
         ...(result.output as Omit<
           TeamBuilderOutput,
-          'profiles' | 'projectTitle' | 'jobDescription'
+          'profiles' | 'projectTitle' | 'jobDescription' | 'emailComms'
         >),
-        profiles: (result.output as TeamBuilderOutput).profileIds
-          .map((profileId) => profileById.get(profileId))
-          .filter((profile): profile is TeamBuilderProfile => Boolean(profile)),
+        profiles,
         projectTitle,
         jobDescription,
+        emailComms,
       },
     }
   } catch (error) {
