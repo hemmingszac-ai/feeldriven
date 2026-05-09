@@ -1,14 +1,6 @@
 import { login, signup } from '../auth/login'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import Link from 'next/link'
+import { AnimatedSphere } from '@/components/landing/animated-sphere'
 
 type LoginPageProps = {
   searchParams?: {
@@ -19,59 +11,97 @@ type LoginPageProps = {
 
 export default function LoginPage({ searchParams }: LoginPageProps) {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-4 py-12">
-      <Card className="w-full">
-        <CardHeader>
-          <CardDescription>
+    <main className="brand-page relative flex min-h-screen items-center justify-center px-4 py-12">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 opacity-20 sm:h-[640px] sm:w-[640px]">
+          <AnimatedSphere />
+        </div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-sm">
+        <div className="mb-8 flex justify-center">
+          <Link href="/">
+            <img
+              src="/logo.svg"
+              alt="FeelDriven"
+              style={{ height: '44px', width: 'auto' }}
+            />
+          </Link>
+        </div>
+
+        <div className="rounded-2xl bg-white p-8 shadow-2xl">
+          <h1 className="mb-1 text-xl font-semibold text-gray-900">Welcome back</h1>
+          <p className="mb-6 text-sm text-gray-500">
             Use your email and password to access FeelDriven.
-          </CardDescription>
-        </CardHeader>
+          </p>
 
-        <CardContent>
-          <div className="grid gap-3">
-            {searchParams?.error ? (
-              <Alert variant="destructive">
-                <AlertDescription>{searchParams.error}</AlertDescription>
-              </Alert>
-            ) : null}
-            {searchParams?.message ? (
-              <Alert>
-                <AlertDescription>{searchParams.message}</AlertDescription>
-              </Alert>
-            ) : null}
+          {searchParams?.error ? (
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {searchParams.error}
+            </div>
+          ) : null}
 
-            <form className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  minLength={6}
-                  required
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Button formAction={login} type="submit">Log in</Button>
-                <Button formAction={signup} type="submit" variant="secondary">
-                  Sign up
-                </Button>
-              </div>
-            </form>
-          </div>
-        </CardContent>
-      </Card>
+          {searchParams?.message ? (
+            <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">
+              {searchParams.message}
+            </div>
+          ) : null}
+
+          <form className="grid gap-4">
+            <div className="grid gap-1.5">
+              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                placeholder="you@company.com"
+                className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-[#ff6333] focus:ring-2 focus:ring-[#ff6333]/20"
+              />
+            </div>
+
+            <div className="grid gap-1.5">
+              <label htmlFor="password" className="text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                minLength={6}
+                required
+                placeholder="••••••••"
+                className="h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:border-[#ff6333] focus:ring-2 focus:ring-[#ff6333]/20"
+              />
+            </div>
+
+            <div className="mt-2 flex gap-3">
+              <button
+                formAction={login}
+                type="submit"
+                className="h-10 flex-1 rounded-lg bg-[#ff6333] text-sm font-medium text-white transition-opacity hover:opacity-90"
+              >
+                Log in
+              </button>
+              <button
+                formAction={signup}
+                type="submit"
+                className="h-10 flex-1 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+              >
+                Sign up
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <p className="mt-6 text-center text-xs text-white/50">
+          © 2026 FeelDriven
+        </p>
+      </div>
     </main>
   )
 }

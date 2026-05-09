@@ -217,4 +217,132 @@
   .team-builder-player-card.p-1\.5 {
     padding: calc(var(--spacing) * 3.5);
   }
+
+  .landing-page {
+    --background: #ff6333;
+    --foreground: #ffffff;
+    --card: #f05227;
+    --card-foreground: #ffffff;
+    --popover: #f05227;
+    --popover-foreground: #ffffff;
+    --primary: #ffffff;
+    --primary-foreground: #ff6333;
+    --secondary: #5d8497;
+    --secondary-foreground: #ffffff;
+    --muted: #e84e22;
+    --muted-foreground: #ffd4bc;
+    --accent: #5d8497;
+    --accent-foreground: #ffffff;
+    --border: #ff7d52;
+    --input: #ff7d52;
+    --ring: #ffffff;
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  .brand-page {
+    background: #ff6333;
+    color: #ffffff;
+  }
+
+  .landing-page .text-stroke {
+    -webkit-text-stroke: 1.5px currentColor;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .landing-page .marquee {
+    animation: landing-marquee 30s linear infinite;
+  }
+
+  .landing-page .marquee-reverse {
+    animation: landing-marquee-reverse 25s linear infinite;
+  }
+
+  .landing-page .line-reveal {
+    clip-path: inset(0 100% 0 0);
+    animation: landing-line-reveal 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  }
+
+  .landing-page .hover-lift {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .landing-page .hover-lift:hover {
+    transform: translateY(-4px);
+  }
+
+  .landing-page .letter-spin {
+    display: inline-block;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .landing-page .letter-spin:hover {
+    transform: rotateY(360deg);
+  }
+
+  .landing-page .animate-char-in {
+    animation: landing-char-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    opacity: 0;
+    filter: blur(40px);
+    transform: translateY(100%);
+  }
+
+  .noise-overlay {
+    position: relative;
+  }
+
+  .noise-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .landing-page .border-sketch {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--background), var(--background)) padding-box,
+      linear-gradient(135deg, var(--foreground) 25%, transparent 25%, transparent 50%, var(--foreground) 50%, var(--foreground) 75%, transparent 75%) border-box;
+    background-size: 100% 100%, 8px 8px;
+  }
+}
+
+@keyframes landing-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes landing-marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes landing-line-reveal {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes landing-char-in {
+  0% {
+    opacity: 0;
+    filter: blur(40px);
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
 }
