@@ -31,7 +31,7 @@ export function SidebarLogoTrigger({
     >
       <div className="flex size-8 shrink-0 items-center justify-center rounded-md">
         <Image
-          src="/logo-icon.svg"
+          src="/logo-icon-white.svg"
           alt=""
           width={32}
           height={32}
@@ -42,7 +42,7 @@ export function SidebarLogoTrigger({
       {!mobileFloating ? (
         <div className="flex min-w-0 flex-1 items-center gap-2 group-data-[collapsible=icon]:hidden">
           <Image
-            src="/logo-wordmark.svg"
+            src="/Word only white.svg"
             alt="teamhuddl"
             width={152}
             height={34}

@@ -44,14 +44,15 @@
   --chart-4: oklch(0.55 0.12 252);
   --chart-5: var(--brand-plum);
   --radius: 0.625rem;
-  --sidebar: oklch(0.965 0.021 76);
-  --sidebar-foreground: var(--brand-ink);
-  --sidebar-primary: var(--brand-orange);
+  --sidebar-background: #ff6333;
+  --sidebar-foreground: #ffffff;
+  --sidebar-accent: rgba(255, 255, 255, 0.15);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.18);
+  --sidebar: var(--sidebar-background);
+  --sidebar-primary: oklch(1 0.004 85);
   --sidebar-primary-foreground: var(--brand-orange-foreground);
-  --sidebar-accent: oklch(0.928 0.048 52);
-  --sidebar-accent-foreground: var(--brand-ink);
-  --sidebar-border: oklch(0.878 0.026 76);
-  --sidebar-ring: var(--brand-orange);
+  --sidebar-ring: oklch(1 0.004 85 / 85%);
   --background: var(--surface);
   --foreground: var(--brand-ink);
 }
@@ -149,14 +150,15 @@
   --chart-3: var(--brand-gold);
   --chart-4: oklch(0.72 0.1 252);
   --chart-5: var(--brand-plum);
-  --sidebar: oklch(0.155 0.033 245);
-  --sidebar-foreground: var(--brand-ink);
-  --sidebar-primary: var(--brand-orange);
-  --sidebar-primary-foreground: var(--brand-orange-foreground);
-  --sidebar-accent: oklch(0.29 0.065 48);
-  --sidebar-accent-foreground: oklch(0.96 0.018 76);
-  --sidebar-border: oklch(1 0.004 85 / 11%);
-  --sidebar-ring: var(--brand-orange);
+  --sidebar-background: #ff6333;
+  --sidebar-foreground: #ffffff;
+  --sidebar-accent: rgba(255, 255, 255, 0.15);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.18);
+  --sidebar: var(--sidebar-background);
+  --sidebar-primary: oklch(1 0.004 85);
+  --sidebar-primary-foreground: oklch(0.17 0.035 250);
+  --sidebar-ring: oklch(1 0.004 85 / 82%);
 }
 
 @layer base {

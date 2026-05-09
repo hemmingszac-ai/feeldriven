@@ -24,7 +24,7 @@ test('sidebar brand uses svg logo assets', async () => {
     'utf8'
   )
 
-  assert.match(source, /\/logos\/longlogo\.svg/)
-  assert.match(source, /\/logos\/iconlogo\.svg/)
+  assert.match(source, /\/Word only white\.svg/)
+  assert.match(source, /\/logo-icon-white\.svg/)
   assert.doesNotMatch(source, />\s*FD\s*</)
 })
