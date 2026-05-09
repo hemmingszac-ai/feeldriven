@@ -10,12 +10,12 @@ test('sidebar exposes shout-outs navigation', async () => {
   assert.match(source, /label:\s*'Shout-outs'/)
 })
 
-test('sidebar exposes team navigation', async () => {
+test('sidebar exposes organization navigation', async () => {
   const source = await readFile(new URL('./app-nav.tsx', import.meta.url), 'utf8')
 
-  assert.match(source, /id:\s*'team'/)
-  assert.match(source, /href:\s*'\/team'/)
-  assert.match(source, /label:\s*'Team'/)
+  assert.match(source, /id:\s*'organization'/)
+  assert.match(source, /href:\s*'\/organization'/)
+  assert.match(source, /label:\s*'Organization'/)
 })
 
 test('sidebar brand uses svg logo assets', async () => {

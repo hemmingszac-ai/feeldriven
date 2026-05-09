@@ -13,7 +13,7 @@ async function loadSearchModule() {
       target: ts.ScriptTarget.ES2020,
     },
   })
-  const dir = await mkdtemp(join(tmpdir(), 'team-search-'))
+  const dir = await mkdtemp(join(tmpdir(), 'organization-search-'))
   const file = join(dir, 'search.mjs')
   await writeFile(file, compiled.outputText)
   return import(file)
@@ -42,25 +42,25 @@ const profiles = [
   },
 ]
 
-test('empty team search returns all profiles', async () => {
-  const { filterTeamProfiles } = await loadSearchModule()
+test('empty organization search returns all profiles', async () => {
+  const { filterOrganizationProfiles } = await loadSearchModule()
 
-  assert.deepEqual(filterTeamProfiles(profiles, ''), profiles)
-  assert.deepEqual(filterTeamProfiles(profiles, '   '), profiles)
+  assert.deepEqual(filterOrganizationProfiles(profiles, ''), profiles)
+  assert.deepEqual(filterOrganizationProfiles(profiles, '   '), profiles)
 })
 
-test('team search matches names case-insensitively', async () => {
-  const { filterTeamProfiles } = await loadSearchModule()
+test('organization search matches names case-insensitively', async () => {
+  const { filterOrganizationProfiles } = await loadSearchModule()
 
-  assert.deepEqual(filterTeamProfiles(profiles, 'ada'), [profiles[0]])
-  assert.deepEqual(filterTeamProfiles(profiles, 'HOPPER'), [profiles[1]])
-  assert.deepEqual(filterTeamProfiles(profiles, 'grace hopper'), [profiles[1]])
+  assert.deepEqual(filterOrganizationProfiles(profiles, 'ada'), [profiles[0]])
+  assert.deepEqual(filterOrganizationProfiles(profiles, 'HOPPER'), [profiles[1]])
+  assert.deepEqual(filterOrganizationProfiles(profiles, 'grace hopper'), [profiles[1]])
 })
 
-test('team search does not match profile fields beyond names', async () => {
-  const { filterTeamProfiles } = await loadSearchModule()
+test('organization search does not match profile fields beyond names', async () => {
+  const { filterOrganizationProfiles } = await loadSearchModule()
 
-  assert.deepEqual(filterTeamProfiles(profiles, 'Leadership'), [])
-  assert.deepEqual(filterTeamProfiles(profiles, 'Deep focus work'), [])
-  assert.deepEqual(filterTeamProfiles(profiles, 'Compiler work'), [])
+  assert.deepEqual(filterOrganizationProfiles(profiles, 'Leadership'), [])
+  assert.deepEqual(filterOrganizationProfiles(profiles, 'Deep focus work'), [])
+  assert.deepEqual(filterOrganizationProfiles(profiles, 'Compiler work'), [])
 })
