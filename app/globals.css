@@ -185,4 +185,9 @@
       radial-gradient(circle at bottom right, oklch(0.31 0.07 205 / 38%), transparent 30rem),
       var(--background);
   }
+
+  .team-builder-dragging,
+  .team-builder-dragging * {
+    cursor: grabbing !important;
+  }
 }

@@ -1,6 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import type { RefObject } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Mail } from 'lucide-react'
 import type { TeamBuilderOutput, TeamBuilderProfile } from './types'
 import { PlayerCard } from './player-card'
@@ -30,10 +31,21 @@ export function TeamScorecard({
 }: TeamScorecardProps) {
   const [dragSource, setDragSource] = useState<DragSource | null>(null)
   const [activeDropZone, setActiveDropZone] = useState<'selected' | 'bench' | null>(null)
+  const selectedZoneRef = useRef<HTMLElement | null>(null)
+  const benchZoneRef = useRef<HTMLElement | null>(null)
+  const draggingProfileId = dragSource?.profileId ?? null
 
   const profileMap = useMemo(
     () => new Map(output.profiles.map((profile) => [profile.id, profile])),
     [output.profiles],
+  )
+
+  const recommendationRankByProfileId = useMemo(
+    () =>
+      new Map(
+        output.profileIds.map((profileId, index) => [profileId, index] as const),
+      ),
+    [output.profileIds],
   )
 
   const selectedProfiles = selectedIds
@@ -52,6 +64,68 @@ export function TeamScorecard({
     .map((email) => encodeURIComponent(email))
     .join(',')}?subject=${encodeURIComponent(`Team assignment: ${subjectBase}`)}`
 
+  useEffect(() => {
+    function isOverZone(
+      event: PointerEvent,
+      zoneRef: RefObject<HTMLElement | null>,
+    ) {
+      const element = document.elementFromPoint(event.clientX, event.clientY)
+      return Boolean(element && zoneRef.current?.contains(element))
+    }
+
+    if (dragSource) {
+      document.body.classList.add('team-builder-dragging')
+      const handlePointerMove = (event: PointerEvent) => {
+        event.preventDefault()
+        if (isOverZone(event, selectedZoneRef)) {
+          setActiveDropZone('selected')
+          return
+        }
+        if (isOverZone(event, benchZoneRef)) {
+          setActiveDropZone('bench')
+          return
+        }
+        setActiveDropZone(null)
+      }
+
+      const handlePointerUp = (event: PointerEvent) => {
+        event.preventDefault()
+
+        const overSelected = isOverZone(event, selectedZoneRef)
+        const overBench = isOverZone(event, benchZoneRef)
+
+        if (dragSource.from === 'bench' && overSelected) {
+          addToSelected(dragSource.profileId)
+        } else if (dragSource.from === 'selected' && overBench) {
+          removeFromSelected(dragSource.profileId)
+        }
+
+        setDragSource(null)
+        setActiveDropZone(null)
+        document.body.classList.remove('team-builder-dragging')
+      }
+
+      const handlePointerCancel = () => {
+        setDragSource(null)
+        setActiveDropZone(null)
+        document.body.classList.remove('team-builder-dragging')
+      }
+
+      window.addEventListener('pointermove', handlePointerMove)
+      window.addEventListener('pointerup', handlePointerUp)
+      window.addEventListener('pointercancel', handlePointerCancel)
+
+      return () => {
+        document.body.classList.remove('team-builder-dragging')
+        window.removeEventListener('pointermove', handlePointerMove)
+        window.removeEventListener('pointerup', handlePointerUp)
+        window.removeEventListener('pointercancel', handlePointerCancel)
+      }
+    } else {
+      document.body.classList.remove('team-builder-dragging')
+    }
+  }, [dragSource])
+
   function removeFromSelected(profileId: string) {
     onSelectedIdsChange(selectedIds.filter((id) => id !== profileId))
   }
@@ -69,33 +143,6 @@ export function TeamScorecard({
 
   function startDrag(profileId: string, from: 'selected' | 'bench') {
     setDragSource({ profileId, from })
-  }
-
-  function dropToSelected() {
-    if (!dragSource) {
-      return
-    }
-
-    if (dragSource.from === 'selected') {
-      return
-    }
-
-    addToSelected(dragSource.profileId)
-    setDragSource(null)
-    setActiveDropZone(null)
-  }
-
-  function dropToBench() {
-    if (!dragSource) {
-      return
-    }
-
-    if (dragSource.from === 'selected') {
-      removeFromSelected(dragSource.profileId)
-    }
-
-    setDragSource(null)
-    setActiveDropZone(null)
   }
 
   return (
@@ -120,17 +167,9 @@ export function TeamScorecard({
       </CardHeader>
       <CardContent className="grid gap-5">
         <section
+          ref={selectedZoneRef}
           className={`grid gap-3 rounded-xl border p-3 ${activeDropZone === 'selected' ? 'border-primary ring-2 ring-primary/20' : 'border-border/70'
             }`}
-          onDragOver={(event) => {
-            event.preventDefault()
-            setActiveDropZone('selected')
-          }}
-          onDrop={(event) => {
-            event.preventDefault()
-            dropToSelected()
-          }}
-          onDragLeave={() => setActiveDropZone(null)}
           aria-label="Selected team lineup"
         >
           <h3 className="text-sm font-semibold">Selected lineup</h3>
@@ -140,15 +179,16 @@ export function TeamScorecard({
             </p>
           ) : (
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {selectedProfiles.map((profile, index) => (
+              {selectedProfiles.map((profile) => (
                 <PlayerCard
                   key={profile.id}
                   profile={profile}
                   selected
-                  rank={index}
+                  rank={recommendationRankByProfileId.get(profile.id)}
+                  dragging={draggingProfileId === profile.id}
                   onAdd={addToSelected}
                   onRemove={removeFromSelected}
-                  onDragStart={startDrag}
+                  onPointerDown={startDrag}
                 />
               ))}
             </div>
@@ -156,17 +196,9 @@ export function TeamScorecard({
         </section>
 
         <section
+          ref={benchZoneRef}
           className={`grid gap-3 rounded-xl border p-3 ${activeDropZone === 'bench' ? 'border-primary ring-2 ring-primary/20' : 'border-border/70'
             }`}
-          onDragOver={(event) => {
-            event.preventDefault()
-            setActiveDropZone('bench')
-          }}
-          onDrop={(event) => {
-            event.preventDefault()
-            dropToBench()
-          }}
-          onDragLeave={() => setActiveDropZone(null)}
           aria-label="Available bench players"
         >
           <h3 className="text-sm font-semibold">Bench (available to swap in)</h3>
@@ -181,10 +213,12 @@ export function TeamScorecard({
                   key={profile.id}
                   profile={profile}
                   selected={false}
+                  rank={recommendationRankByProfileId.get(profile.id)}
                   highlight={dragSource?.profileId === profile.id}
+                  dragging={draggingProfileId === profile.id}
                   onAdd={addToSelected}
                   onRemove={removeFromSelected}
-                  onDragStart={startDrag}
+                  onPointerDown={startDrag}
                 />
               ))}
             </div>

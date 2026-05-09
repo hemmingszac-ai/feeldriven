@@ -1,5 +1,6 @@
 'use client'
 
+import type { PointerEvent as ReactPointerEvent } from 'react'
 import Link from 'next/link'
 import { GripVertical, Plus, X } from 'lucide-react'
 import type { TeamBuilderProfile } from './types'
@@ -10,9 +11,14 @@ type PlayerCardProps = {
   rank?: number
   selected: boolean
   highlight?: boolean
+  dragging?: boolean
   onAdd: (profileId: string) => void
   onRemove: (profileId: string) => void
-  onDragStart: (profileId: string, list: 'selected' | 'bench') => void
+  onPointerDown: (
+    profileId: string,
+    list: 'selected' | 'bench',
+    event: ReactPointerEvent<HTMLElement>,
+  ) => void
 }
 
 export function PlayerCard({
@@ -20,22 +26,31 @@ export function PlayerCard({
   rank,
   selected,
   highlight = false,
+  dragging = false,
   onAdd,
   onRemove,
-  onDragStart,
+  onPointerDown,
 }: PlayerCardProps) {
   const topTags = [...profile.enjoyableWork, ...profile.skillsToDevelop].slice(0, 2)
   const profileHref = `/organization/${profile.id}`
 
   return (
     <article
-      draggable
-      onDragStart={() => onDragStart(profile.id, selected ? 'selected' : 'bench')}
-      className={`group relative min-h-44 rounded-xl border p-3 shadow-sm transition ${
+      onPointerDown={(event) => {
+        const target = event.target as HTMLElement | null
+        if (target?.closest('a,button,input,textarea,select,label')) {
+          return
+        }
+
+        event.preventDefault()
+        onPointerDown(profile.id, selected ? 'selected' : 'bench', event)
+      }}
+      data-dragging={dragging ? 'true' : 'false'}
+      className={`group relative min-h-44 cursor-grab select-none touch-none active:cursor-grabbing rounded-xl border p-3 shadow-sm transition ${
         selected
           ? 'border-primary/40 bg-gradient-to-b from-primary/15 via-background to-background'
           : 'border-border/60 bg-gradient-to-b from-secondary/20 to-background'
-      } ${highlight ? 'ring-2 ring-primary/35' : ''}`}
+      } ${highlight ? 'ring-2 ring-primary/35' : ''} ${dragging ? 'cursor-grabbing opacity-90' : ''}`}
     >
       <div className="absolute right-2 top-2 flex items-center gap-1.5">
         {typeof rank === 'number' ? (
@@ -48,7 +63,6 @@ export function PlayerCard({
 
       <div className="grid h-full gap-2.5 pt-5">
         <div>
-          <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Player</p>
           <h3 className="truncate text-base font-semibold">
             <Link
               href={profileHref}
