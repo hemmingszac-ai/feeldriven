@@ -17,7 +17,14 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 
-const navItems = [
+type NavItem = {
+  id: string
+  href: string
+  label: string
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+  managerOnly?: boolean
+}
+const navItems: NavItem[] = [
   {
     id: 'dashboard',
     href: '/dashboard',
@@ -66,22 +73,22 @@ export function AppNav({ userRole }: AppNavProps) {
           {navItems
             .filter((item) => !item.managerOnly || isManager)
             .map((item) => {
-            const Icon = item.icon
-            const isActive =
-              pathname === item.href || pathname.startsWith(`${item.href}/`)
+              const Icon = item.icon
+              const isActive =
+                pathname === item.href || pathname.startsWith(`${item.href}/`)
 
-            return (
-              <SidebarMenuItem key={item.id}>
-                <SidebarMenuButton
-                  render={<Link href={item.href} />}
-                  isActive={isActive}
-                  tooltip={item.label}
-                >
-                  <Icon className="size-4" />
-                  <span>{item.label}</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )
+              return (
+                <SidebarMenuItem key={item.id}>
+                  <SidebarMenuButton
+                    render={<Link href={item.href} />}
+                    isActive={isActive}
+                    tooltip={item.label}
+                  >
+                    <Icon className="size-4" />
+                    <span>{item.label}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )
             })}
         </SidebarMenu>
       </SidebarGroupContent>
