@@ -1,10 +1,12 @@
 import { cache } from 'react'
 import { redirect } from 'next/navigation'
 import type { User } from '@supabase/supabase-js'
+import { formatProfileName } from '@/app/lib/profiles'
 import { createClient } from '@/app/lib/supabase/server'
 
 export type CurrentProfile = {
   id: string
+  email: string | null
   first_name: string
   last_name: string
   skills_to_develop: string[]
@@ -25,7 +27,7 @@ export const getCurrentUserProfile = cache(async () => {
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select(
-      'id, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects'
+      'id, email, first_name, last_name, skills_to_develop, enjoyable_work, stretch_projects'
     )
     .eq('id', user.id)
     .maybeSingle<CurrentProfile>()
@@ -38,6 +40,6 @@ export const getCurrentUserProfile = cache(async () => {
     supabase,
     user: user as User,
     profile,
-    userName: `${profile.first_name} ${profile.last_name}`,
+    userName: formatProfileName(profile),
   }
 })

@@ -1,5 +1,6 @@
-import { Award, Brain, Sparkles, Target } from 'lucide-react'
+import { Award, Brain, Mail, Sparkles, Target } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
+import { getProfileInitials } from '@/app/lib/profiles'
 import {
   Card,
   CardContent,
@@ -7,24 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-
-function PillList({ items }: { items: string[] }) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {items.map((item) => (
-        <span
-          key={item}
-          className="inline-flex h-7 items-center rounded-lg bg-secondary px-2.5 text-xs font-medium text-secondary-foreground"
-        >
-          {item}
-        </span>
-      ))}
-    </div>
-  )
-}
+import { PillList } from '@/components/pill-list'
 
 export default async function ProfilePage() {
   const { profile, user, userName } = await getCurrentUserProfile()
+  const userEmail = profile.email ?? user.email ?? 'Email not set'
   const role = user.user_metadata?.role ?? 'Role not set'
   const skillCount = profile.skills_to_develop.length
 
@@ -34,8 +22,7 @@ export default async function ProfilePage() {
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div className="flex min-w-0 items-center gap-4">
             <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-semibold text-primary-foreground">
-              {profile.first_name[0]}
-              {profile.last_name[0]}
+              {getProfileInitials(profile)}
             </div>
             <div className="min-w-0">
               <p className="text-sm font-medium text-muted-foreground">
@@ -44,6 +31,10 @@ export default async function ProfilePage() {
               <h1 className="mt-1 truncate text-3xl font-semibold tracking-normal">
                 {userName}
               </h1>
+              <p className="mt-2 flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
+                <Mail className="size-4 shrink-0" />
+                <span className="truncate">{userEmail}</span>
+              </p>
             </div>
           </div>
           <div className="inline-flex w-fit items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium">

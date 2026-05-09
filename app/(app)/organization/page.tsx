@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Search, UserRound, UsersRound } from 'lucide-react'
+import { getProfileInitials } from '@/app/lib/profiles'
 import {
   filterOrganizationProfiles,
   getOrganizationProfileName,
@@ -25,8 +26,7 @@ type OrganizationPageProps = {
 function Initials({ profile }: { profile: OrganizationProfile }) {
   return (
     <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
-      {profile.first_name[0]}
-      {profile.last_name[0]}
+      {getProfileInitials(profile)}
     </div>
   )
 }

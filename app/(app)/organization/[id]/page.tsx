@@ -2,8 +2,10 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, Sparkles, Target } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
+import { getProfileInitials } from '@/app/lib/profiles'
 import { getOrganizationProfileName, type OrganizationProfile } from '../search'
 import { buttonVariants } from '@/components/ui/button'
+import { PillList } from '@/components/pill-list'
 import {
   Card,
   CardContent,
@@ -16,25 +18,6 @@ type OrganizationMemberPageProps = {
   params: {
     id: string
   }
-}
-
-function PillList({ items }: { items: string[] }) {
-  if (items.length === 0) {
-    return <p className="text-sm text-muted-foreground">Nothing recorded yet.</p>
-  }
-
-  return (
-    <div className="flex flex-wrap gap-2">
-      {items.map((item) => (
-        <span
-          key={item}
-          className="inline-flex h-7 items-center rounded-lg bg-secondary px-2.5 text-xs font-medium text-secondary-foreground"
-        >
-          {item}
-        </span>
-      ))}
-    </div>
-  )
 }
 
 export default async function OrganizationMemberPage({ params }: OrganizationMemberPageProps) {
@@ -69,8 +52,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
       <section className="rounded-xl border bg-card p-5 text-card-foreground shadow-sm">
         <div className="flex min-w-0 items-center gap-4">
           <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-semibold text-primary-foreground">
-            {profile.first_name[0]}
-            {profile.last_name[0]}
+            {getProfileInitials(profile)}
           </div>
           <div className="min-w-0">
             <p className="truncate text-2xl font-semibold tracking-normal">
@@ -89,7 +71,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <PillList items={profile.skills_to_develop} />
+            <PillList items={profile.skills_to_develop} emptyMessage="Nothing recorded yet." />
           </CardContent>
         </Card>
 
@@ -101,7 +83,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <PillList items={profile.enjoyable_work} />
+            <PillList items={profile.enjoyable_work} emptyMessage="Nothing recorded yet." />
           </CardContent>
         </Card>
       </div>
@@ -133,7 +115,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
             <CardDescription>Preferred contribution styles.</CardDescription>
           </CardHeader>
           <CardContent>
-            <PillList items={profile.enjoyable_work} />
+            <PillList items={profile.enjoyable_work} emptyMessage="Nothing recorded yet." />
           </CardContent>
         </Card>
       </div>

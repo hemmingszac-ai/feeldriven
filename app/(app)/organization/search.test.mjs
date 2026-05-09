@@ -7,7 +7,17 @@ import ts from 'typescript'
 
 async function loadSearchModule() {
   const source = await readFile(new URL('./search.ts', import.meta.url), 'utf8')
+  const profilesSource = await readFile(
+    new URL('../../lib/profiles.ts', import.meta.url),
+    'utf8'
+  )
   const compiled = ts.transpileModule(source, {
+    compilerOptions: {
+      module: ts.ModuleKind.ES2022,
+      target: ts.ScriptTarget.ES2020,
+    },
+  })
+  const compiledProfiles = ts.transpileModule(profilesSource, {
     compilerOptions: {
       module: ts.ModuleKind.ES2022,
       target: ts.ScriptTarget.ES2020,
@@ -15,7 +25,12 @@ async function loadSearchModule() {
   })
   const dir = await mkdtemp(join(tmpdir(), 'organization-search-'))
   const file = join(dir, 'search.mjs')
-  await writeFile(file, compiled.outputText)
+  const profilesFile = join(dir, 'profiles.mjs')
+  await writeFile(profilesFile, compiledProfiles.outputText)
+  await writeFile(
+    file,
+    compiled.outputText.replace('@/app/lib/profiles', './profiles.mjs')
+  )
   return import(file)
 }
 

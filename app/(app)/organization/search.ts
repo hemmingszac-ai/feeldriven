@@ -1,3 +1,5 @@
+import { formatProfileName } from '@/app/lib/profiles'
+
 export type OrganizationProfile = {
   id: string
   first_name: string
@@ -10,7 +12,7 @@ export type OrganizationProfile = {
 export function getOrganizationProfileName(
   profile: Pick<OrganizationProfile, 'first_name' | 'last_name'>
 ) {
-  return `${profile.first_name} ${profile.last_name}`
+  return formatProfileName(profile)
 }
 
 export function filterOrganizationProfiles(

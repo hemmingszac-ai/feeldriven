@@ -1,4 +1,5 @@
 import { Megaphone } from 'lucide-react'
+import { formatProfileName } from '@/app/lib/profiles'
 import { createShoutOut } from './actions'
 import { normalizeShoutOuts, type ShoutOutWithProfiles } from './feed'
 import { SHOUT_OUT_MAX_MESSAGE_LENGTH } from './validation'
@@ -24,14 +25,6 @@ type Profile = {
   id: string
   first_name: string
   last_name: string
-}
-
-function getProfileName(profile?: Profile) {
-  if (!profile) {
-    return 'Unknown teammate'
-  }
-
-  return `${profile.first_name} ${profile.last_name}`
 }
 
 function formatTimestamp(value: string) {
@@ -106,8 +99,8 @@ export default async function ShoutOutsPage({
             </Card>
           ) : (
             shoutOuts.map((shoutOut) => {
-              const sender = getProfileName(shoutOut.sender ?? undefined)
-              const recipient = getProfileName(shoutOut.recipient ?? undefined)
+              const sender = formatProfileName(shoutOut.sender)
+              const recipient = formatProfileName(shoutOut.recipient)
 
               return (
                 <Card
@@ -186,7 +179,7 @@ export default async function ShoutOutsPage({
                   </option>
                   {recipientOptions.map((profile) => (
                     <option key={profile.id} value={profile.id}>
-                      {getProfileName(profile)}
+                      {formatProfileName(profile)}
                     </option>
                   ))}
                 </select>

@@ -1,5 +1,6 @@
 import { LogOut } from 'lucide-react'
 import { signout } from '@/app/auth/actions'
+import { getNameInitials } from '@/app/lib/profiles'
 import { AppNav } from '@/components/app-nav'
 import { SidebarLogoTrigger } from '@/components/sidebar-logo-trigger'
 import { Button } from '@/components/ui/button'
@@ -52,11 +53,7 @@ export function AppShell({
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" tooltip={userName}>
                 <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-xs font-semibold text-foreground ring-1 ring-primary/20">
-                  {userName
-                    .split(' ')
-                    .map((part) => part[0])
-                    .join('')
-                    .slice(0, 2)}
+                  {getNameInitials(userName)}
                 </div>
                 <div className="grid min-w-0 flex-1 text-left leading-tight">
                   <span className="truncate font-medium">{userName}</span>

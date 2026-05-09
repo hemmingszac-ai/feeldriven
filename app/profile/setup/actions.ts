@@ -62,6 +62,7 @@ export async function createProfile(formData: FormData) {
     .upsert(
       {
         id: user.id,
+        email: user.email,
         first_name: firstName,
         last_name: lastName,
         skills_to_develop: skillsToDevelop,
