@@ -40,9 +40,9 @@ export function TeamScorecard({ output }: TeamScorecardProps) {
   const canDraftEmail = selectedEmails.length > 0
   const subjectBase =
     output.projectTitle || output.jobDescription.split('\n')[0]?.trim() || 'New mission'
-  const outlookHref = `https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(
-    selectedEmails.join(';'),
-  )}&subject=${encodeURIComponent(`Team assignment: ${subjectBase}`)}`
+  const mailtoHref = `mailto:${selectedEmails
+    .map((email) => encodeURIComponent(email))
+    .join(',')}?subject=${encodeURIComponent(`Team assignment: ${subjectBase}`)}`
 
   function removeFromSelected(profileId: string) {
     setSelectedIds((current) => current.filter((id) => id !== profileId))
@@ -181,7 +181,7 @@ export function TeamScorecard({ output }: TeamScorecardProps) {
             type="button"
             disabled={!canDraftEmail}
             onClick={() => {
-              window.open(outlookHref, '_blank', 'noopener,noreferrer')
+              window.location.href = mailtoHref
             }}
           >
             <Mail className="size-4" />
