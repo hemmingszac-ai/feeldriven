@@ -167,7 +167,7 @@ export function AppShell({
         <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-3 border-b bg-background/78 px-4 backdrop-blur-xl supports-[backdrop-filter]:bg-background/62 md:px-6">
           <SidebarTrigger />
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium">FieldDriven</p>
+            <p className="truncate text-sm font-medium">FeelDriven</p>
             <p className="truncate text-xs text-muted-foreground">
               SaaSathon workspace
             </p>

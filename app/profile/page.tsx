@@ -86,7 +86,7 @@ export default async function ProfilePage() {
               </div>
               <div className="min-w-0">
                 <p className="text-sm font-medium text-muted-foreground">
-                  FieldDriven profile
+                  FeelDriven profile
                 </p>
                 <h1 className="mt-1 truncate text-3xl font-semibold tracking-normal">
                   {fullName}
@@ -146,7 +146,7 @@ export default async function ProfilePage() {
             <CardHeader>
               <CardTitle>Skills to develop</CardTitle>
               <CardDescription>
-                Growth areas FieldDriven can use when shaping missions.
+                Growth areas FeelDriven can use when shaping missions.
               </CardDescription>
             </CardHeader>
             <CardContent>

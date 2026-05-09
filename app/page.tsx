@@ -15,7 +15,7 @@ export default function HomePage() {
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-4xl font-semibold tracking-normal md:text-5xl">
-            FieldDriven
+            FeelDriven
           </CardTitle>
           <CardDescription className="max-w-3xl text-base leading-7">
           A workplace platform that makes work feel like being part of a

@@ -53,7 +53,7 @@ export default async function DashboardPage() {
                 <BadgeCheck className="size-4 text-primary" />
                 Profile ready
               </CardTitle>
-              <CardDescription>Your FieldDriven identity is set.</CardDescription>
+              <CardDescription>Your FeelDriven identity is set.</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-semibold">100%</p>
@@ -89,7 +89,7 @@ export default async function DashboardPage() {
           <CardHeader>
             <CardTitle className="text-xl">Workspace pulse</CardTitle>
             <CardDescription>
-              FieldDriven is ready to turn team goals into shared missions,
+              FeelDriven is ready to turn team goals into shared missions,
               progress, and recognition.
             </CardDescription>
           </CardHeader>

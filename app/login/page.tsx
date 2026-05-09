@@ -25,7 +25,7 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
         <CardHeader>
           <CardTitle className="text-2xl">Log in</CardTitle>
           <CardDescription>
-            Use your email and password to access FieldDriven.
+            Use your email and password to access FeelDriven.
           </CardDescription>
         </CardHeader>
 

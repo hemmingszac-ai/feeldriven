@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'FieldDriven',
+  title: 'FeelDriven',
   description: 'AI-first productivity starter app for SaaSathon.',
 }
 
