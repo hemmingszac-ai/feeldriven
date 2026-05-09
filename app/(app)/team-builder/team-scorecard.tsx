@@ -33,6 +33,7 @@ export function TeamScorecard({
   const selectedZoneRef = useRef<HTMLElement | null>(null)
   const benchZoneRef = useRef<HTMLElement | null>(null)
   const draggingProfileId = dragSource?.profileId ?? null
+  const managerProfileId = output.managerProfileId
 
   const profileMap = useMemo(
     () => new Map(output.profiles.map((profile) => [profile.id, profile])),
@@ -78,13 +79,23 @@ export function TeamScorecard({
       return (profileOrderById.get(left.id) ?? 0) - (profileOrderById.get(right.id) ?? 0)
     })
 
-  const selectedProfiles = sortProfilesByRecommendation(
+  const managerProfile = managerProfileId
+    ? profileMap.get(managerProfileId)
+    : undefined
+  const selectedNonManagerProfiles = sortProfilesByRecommendation(
     selectedIds
+      .filter((id) => id !== managerProfileId)
       .map((id) => profileMap.get(id))
       .filter((profile): profile is TeamBuilderProfile => Boolean(profile)),
   )
+  const selectedProfiles = managerProfile
+    ? [managerProfile, ...selectedNonManagerProfiles]
+    : selectedNonManagerProfiles
   const benchProfiles = sortProfilesByRecommendation(
-    output.profiles.filter((profile) => !selectedIds.includes(profile.id)),
+    output.profiles.filter(
+      (profile) =>
+        profile.id !== managerProfileId && !selectedIds.includes(profile.id),
+    ),
   )
   const showDropZones = Boolean(dragSource)
 
@@ -166,10 +177,18 @@ export function TeamScorecard({
   }, [dragSource])
 
   function removeFromSelected(profileId: string) {
+    if (profileId === managerProfileId) {
+      return
+    }
+
     onSelectedIdsChange(selectedIds.filter((id) => id !== profileId))
   }
 
   function addToSelected(profileId: string) {
+    if (profileId === managerProfileId) {
+      return
+    }
+
     if (selectedIds.includes(profileId)) {
       return
     }
@@ -177,6 +196,10 @@ export function TeamScorecard({
   }
 
   function startDrag(profileId: string, from: 'selected' | 'bench') {
+    if (profileId === managerProfileId) {
+      return
+    }
+
     setDragSource({ profileId, from })
   }
 
@@ -214,7 +237,12 @@ export function TeamScorecard({
                 <PlayerCard
                   profile={profile}
                   selected
-                  rank={recommendationRankByProfileId.get(profile.id)}
+                  rank={
+                    profile.id === managerProfileId
+                      ? undefined
+                      : recommendationRankByProfileId.get(profile.id)
+                  }
+                  isManager={profile.id === managerProfileId}
                   dragging={draggingProfileId === profile.id}
                   onAdd={addToSelected}
                   onRemove={removeFromSelected}

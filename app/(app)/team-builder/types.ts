@@ -10,6 +10,7 @@ export type TeamBuilderProfile = {
 
 export type TeamBuilderOutput = {
   profileIds: string[]
+  managerProfileId: string | null
   subject: string
   emailBody: string
   profiles: TeamBuilderProfile[]

@@ -25,7 +25,7 @@ const initialState: TeamBuilderFormState = {
   status: 'idle',
 }
 
-const TEAM_BUILDER_SESSION_KEY = 'team-builder-session-state'
+const TEAM_BUILDER_SESSION_KEY = 'team-builder-session-state-v2'
 
 type TeamBuilderSessionState = {
   state: TeamBuilderFormState
@@ -36,8 +36,13 @@ function getOutputSignature(output: TeamBuilderOutput) {
   return [
     output.projectTitle,
     output.jobDescription,
+    output.managerProfileId ?? '',
     output.profileIds.join('|'),
   ].join('::')
+}
+
+function dedupeIds(ids: string[]) {
+  return Array.from(new Set(ids))
 }
 
 function normalizeSelectedIds(
@@ -45,13 +50,23 @@ function normalizeSelectedIds(
   selectedIds?: string[],
 ) {
   const validIds = new Set(output.profiles.map((profile) => profile.id))
-  const filtered = (selectedIds ?? []).filter((id) => validIds.has(id))
+  const managerProfileId =
+    output.managerProfileId && validIds.has(output.managerProfileId)
+      ? output.managerProfileId
+      : null
+  const candidateIds =
+    selectedIds && selectedIds.length > 0 ? selectedIds : output.profileIds
+  const filtered = dedupeIds(
+    candidateIds.filter(
+      (id) => validIds.has(id) && id !== managerProfileId,
+    ),
+  )
 
-  if (filtered.length > 0) {
-    return filtered
+  if (managerProfileId) {
+    return [managerProfileId, ...filtered]
   }
 
-  return output.profileIds.filter((id) => validIds.has(id))
+  return filtered
 }
 
 function readTeamBuilderSessionState(): TeamBuilderSessionState | null {
@@ -69,7 +84,8 @@ function readTeamBuilderSessionState(): TeamBuilderSessionState | null {
     if (
       parsed?.state?.status === 'success' &&
       Array.isArray(parsed.selectedIds) &&
-      parsed.state.output
+      parsed.state.output &&
+      'managerProfileId' in parsed.state.output
     ) {
       return {
         state: parsed.state,
@@ -134,7 +150,7 @@ function TeamBuilderWorkspaceContent({
     const nextSelectedIds =
       previousOutputSignature.current !== nextSignature
         ? normalizeSelectedIds(state.output)
-        : selectedIds
+        : normalizeSelectedIds(state.output, selectedIds)
 
     if (previousOutputSignature.current !== nextSignature) {
       previousOutputSignature.current = nextSignature
@@ -151,12 +167,15 @@ function TeamBuilderWorkspaceContent({
   }, [selectedIds, state])
 
   const activeSessionState =
-    persistedSessionState?.state.status === 'success'
-      ? persistedSessionState
-      : state.status === 'success'
+    state.status === 'success'
+      ? {
+          state,
+          selectedIds,
+        }
+      : persistedSessionState?.state.status === 'success'
         ? {
-            state,
-            selectedIds,
+            state: persistedSessionState.state,
+            selectedIds: persistedSessionState.selectedIds,
           }
         : persistedSessionState
 
@@ -166,18 +185,18 @@ function TeamBuilderWorkspaceContent({
       : null
 
   useEffect(() => {
-    if (activeSessionState?.state.status !== 'success') {
-      return
-    }
-
-    setPersistedSessionState(activeSessionState)
-  }, [activeSessionState])
-
-  useEffect(() => {
     if (activeDreamTeamSignature) {
       setIsFormOpen(false)
     }
   }, [activeDreamTeamSignature])
+
+  const activeOutput =
+    activeSessionState?.state.status === 'success'
+      ? activeSessionState.state.output
+      : null
+  const activeSelectedIds = activeOutput
+    ? normalizeSelectedIds(activeOutput, activeSessionState?.selectedIds)
+    : []
 
   return (
     <div className="mx-auto w-full max-w-6xl">
@@ -214,12 +233,16 @@ function TeamBuilderWorkspaceContent({
         </Card>
       </Collapsible>
 
-      {activeSessionState?.state.status === 'success' ? (
+      {activeOutput ? (
         <TeamScorecard
-          key={getOutputSignature(activeSessionState.state.output)}
-          output={activeSessionState.state.output}
-          selectedIds={activeSessionState.selectedIds}
-          onSelectedIdsChange={setSelectedIds}
+          key={getOutputSignature(activeOutput)}
+          output={activeOutput}
+          selectedIds={activeSelectedIds}
+          onSelectedIdsChange={(nextSelectedIds) => {
+            setSelectedIds(
+              normalizeSelectedIds(activeOutput, nextSelectedIds),
+            )
+          }}
         />
       ) : null}
     </div>

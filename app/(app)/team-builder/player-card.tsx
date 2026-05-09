@@ -2,7 +2,14 @@
 
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import Link from 'next/link'
-import { BriefcaseBusiness, Check, GripVertical, Plus, X } from 'lucide-react'
+import {
+  BriefcaseBusiness,
+  Check,
+  GripVertical,
+  Plus,
+  Star,
+  X,
+} from 'lucide-react'
 import type { TeamBuilderProfile } from './types'
 import { Button } from '@/components/ui/button'
 
@@ -10,6 +17,7 @@ type PlayerCardProps = {
   profile: TeamBuilderProfile
   rank?: number
   selected: boolean
+  isManager?: boolean
   highlight?: boolean
   dragging?: boolean
   onAdd: (profileId: string) => void
@@ -25,6 +33,7 @@ export function PlayerCard({
   profile,
   rank,
   selected,
+  isManager = false,
   highlight = false,
   dragging = false,
   onAdd,
@@ -40,6 +49,10 @@ export function PlayerCard({
   return (
     <article
       onPointerDown={(event) => {
+        if (isManager) {
+          return
+        }
+
         if (event.pointerType === 'touch') {
           return
         }
@@ -53,35 +66,45 @@ export function PlayerCard({
         onPointerDown(profile.id, selected ? 'selected' : 'bench', event)
       }}
       data-dragging={dragging ? 'true' : 'false'}
-      className={`team-builder-player-card group relative aspect-[4/6] w-full max-w-40 cursor-grab select-none touch-pan-x overflow-hidden active:cursor-grabbing rounded-xl border-2 p-1.5 shadow-sm transition ${
+      className={`team-builder-player-card group relative aspect-[4/6] w-full max-w-40 select-none touch-pan-x overflow-hidden rounded-xl border-2 p-1.5 shadow-sm transition ${
         selected
           ? 'border-primary/60 bg-gradient-to-b from-primary/15 via-background to-background'
           : 'border-border/80 bg-gradient-to-b from-secondary/20 to-background'
-      } ${highlight ? 'ring-2 ring-primary/35' : ''} ${dragging ? 'cursor-grabbing opacity-90' : ''}`}
+      } ${isManager ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'} ${highlight ? 'ring-2 ring-primary/35' : ''} ${dragging ? 'cursor-grabbing opacity-90' : ''}`}
     >
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon-xs"
-        className="absolute bottom-1.5 right-1.5 size-6 touch-none cursor-grab active:cursor-grabbing"
-        aria-label={`Drag ${profile.name}`}
-        title={`Drag ${profile.name}`}
-        onPointerDown={(event) => {
-          event.preventDefault()
-          event.stopPropagation()
-          onPointerDown(profile.id, selected ? 'selected' : 'bench', event)
-        }}
-      >
-        <GripVertical className="size-3.5" />
-      </Button>
+      {!isManager ? (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-xs"
+          className="absolute bottom-1.5 right-1.5 size-6 touch-none cursor-grab active:cursor-grabbing"
+          aria-label={`Drag ${profile.name}`}
+          title={`Drag ${profile.name}`}
+          onPointerDown={(event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            onPointerDown(profile.id, selected ? 'selected' : 'bench', event)
+          }}
+        >
+          <GripVertical className="size-3.5" />
+        </Button>
+      ) : null}
 
       <div className="absolute right-1.5 top-1.5 flex items-center gap-1">
-        {typeof rank === 'number' ? (
+        {isManager ? (
+          <span
+            className="inline-flex h-5 items-center rounded-md border border-primary/40 bg-primary/10 px-1.5 text-primary"
+            aria-label="Team manager"
+            title="Team manager"
+          >
+            <Star className="size-3 fill-current" />
+          </span>
+        ) : typeof rank === 'number' ? (
           <span className="inline-flex h-5 items-center rounded-md border border-border/70 bg-background px-1.5 text-[10px] font-semibold text-foreground">
             #{rank + 1}
           </span>
         ) : null}
-        {selected ? (
+        {isManager ? null : selected ? (
           <Button
             type="button"
             variant="ghost"

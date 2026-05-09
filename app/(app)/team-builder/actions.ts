@@ -137,9 +137,19 @@ export async function submitTeamBuilderInput(
   try {
     const database = await loadAiDatabaseContext()
     const profiles = database.profiles.map(normalizeProfile)
+    const managerProfile = profiles.find((profile) => profile.id === user.id)
+    const managerProfileId = managerProfile?.id ?? null
+    const aiDatabase = managerProfileId
+      ? {
+          ...database,
+          profiles: database.profiles.filter(
+            (profile) => profile.id !== managerProfileId,
+          ),
+        }
+      : database
 
     const result = await generateStructuredOutput({
-      database,
+      database: aiDatabase,
       systemPrompt: `${DEFAULT_SYSTEM_PROMPT}\n\n${TEAM_BUILDER_EMAIL_PROMPT}`,
       form: {
         emailComms,
@@ -150,14 +160,26 @@ export async function submitTeamBuilderInput(
       schemaName: 'team_builder_recommendation',
       schema: teamBuilderSchema,
     })
+    const generatedOutput = result.output as Pick<
+      TeamBuilderOutput,
+      'profileIds' | 'subject' | 'emailBody'
+    >
+    const validProfileIds = new Set(profiles.map((profile) => profile.id))
+    const recommendedProfileIds = Array.from(
+      new Set(
+        generatedOutput.profileIds.filter(
+          (profileId) =>
+            profileId !== managerProfileId && validProfileIds.has(profileId),
+        ),
+      ),
+    )
 
     return {
       status: 'success',
       output: {
-        ...(result.output as Omit<
-          TeamBuilderOutput,
-          'profiles' | 'projectTitle' | 'jobDescription' | 'emailComms'
-        >),
+        ...generatedOutput,
+        profileIds: recommendedProfileIds,
+        managerProfileId,
         profiles,
         projectTitle,
         jobDescription,

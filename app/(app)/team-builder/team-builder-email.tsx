@@ -51,6 +51,7 @@ export function TeamBuilderEmail({ output, selectedIds }: TeamBuilderEmailProps)
   const [emailBody, setEmailBody] = useState(output.emailBody)
 
   const selectedProfiles = selectedIds
+    .filter((id) => id !== output.managerProfileId)
     .map((id) => output.profiles.find((profile) => profile.id === id))
     .filter(Boolean)
   const selectedEmails = selectedProfiles
@@ -100,9 +101,16 @@ export function TeamBuilderEmail({ output, selectedIds }: TeamBuilderEmailProps)
       <input type="hidden" name="projectTitle" value={output.projectTitle} />
       <input type="hidden" name="jobDescription" value={output.jobDescription} />
       <input type="hidden" name="emailComms" value={output.emailComms} />
-      {selectedIds.map((profileId) => (
-        <input key={profileId} type="hidden" name="selectedProfileIds" value={profileId} />
-      ))}
+      {selectedIds
+        .filter((profileId) => profileId !== output.managerProfileId)
+        .map((profileId) => (
+          <input
+            key={profileId}
+            type="hidden"
+            name="selectedProfileIds"
+            value={profileId}
+          />
+        ))}
 
       {regenerateState.status === 'error' ? (
         <Alert variant="destructive">

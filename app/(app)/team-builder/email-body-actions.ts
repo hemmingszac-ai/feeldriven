@@ -90,7 +90,9 @@ export async function regenerateTeamBuilderEmailBody(
   const emailComms = formData.get('emailComms')?.toString().trim() ?? ''
   const projectTitle = formData.get('projectTitle')?.toString().trim() ?? ''
   const jobDescription = formData.get('jobDescription')?.toString().trim() ?? ''
-  const selectedProfileIds = readSelectedProfileIds(formData)
+  const selectedProfileIds = readSelectedProfileIds(formData).filter(
+    (profileId) => profileId !== user.id,
+  )
 
   if (!jobDescription) {
     return failEmail('Please add a job description before regenerating the email body.')
