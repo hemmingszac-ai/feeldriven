@@ -1,6 +1,6 @@
 import { Megaphone } from 'lucide-react'
 import { createShoutOut } from './actions'
-import { normalizeShoutOuts, type ShoutOut } from './feed'
+import { normalizeShoutOuts, type ShoutOutWithProfiles } from './feed'
 import { SHOUT_OUT_MAX_MESSAGE_LENGTH } from './validation'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -47,23 +47,33 @@ export default async function ShoutOutsPage({
 }: ShoutOutsPageProps) {
   const { supabase, user } = await getCurrentUserProfile()
 
-  const { data: profiles = [] } = await supabase
-    .from('profiles')
-    .select('id, first_name, last_name')
-    .order('first_name', { ascending: true })
-    .order('last_name', { ascending: true })
+  const [profilesResult, shoutOutsResult] = await Promise.all([
+    supabase
+      .from('profiles')
+      .select('id, first_name, last_name')
+      .order('first_name', { ascending: true })
+      .order('last_name', { ascending: true }),
+    supabase
+      .from('shout_outs')
+      .select(
+        `
+        id,
+        sender_id,
+        recipient_id,
+        message,
+        created_at,
+        sender:profiles!shout_outs_sender_id_fkey(id, first_name, last_name),
+        recipient:profiles!shout_outs_recipient_id_fkey(id, first_name, last_name)
+      `
+      )
+      .order('created_at', { ascending: false })
+      .limit(50),
+  ])
 
-  const { data: shoutOutRows } = await supabase
-    .from('shout_outs')
-    .select('id, sender_id, recipient_id, message, created_at')
-    .order('created_at', { ascending: false })
-    .limit(50)
-
-  const shoutOuts = normalizeShoutOuts(shoutOutRows as ShoutOut[] | null)
-  const profileMap = new Map(
-    (profiles as Profile[]).map((profile) => [profile.id, profile])
+  const shoutOuts = normalizeShoutOuts(
+    shoutOutsResult.data as ShoutOutWithProfiles[] | null
   )
-  const recipientOptions = (profiles as Profile[]).filter(
+  const recipientOptions = ((profilesResult.data ?? []) as Profile[]).filter(
     (profile) => profile.id !== user.id
   )
 
@@ -85,10 +95,8 @@ export default async function ShoutOutsPage({
             </Card>
           ) : (
             shoutOuts.map((shoutOut) => {
-              const sender = getProfileName(profileMap.get(shoutOut.sender_id))
-              const recipient = getProfileName(
-                profileMap.get(shoutOut.recipient_id)
-              )
+              const sender = getProfileName(shoutOut.sender ?? undefined)
+              const recipient = getProfileName(shoutOut.recipient ?? undefined)
 
               return (
                 <Card key={shoutOut.id}>
