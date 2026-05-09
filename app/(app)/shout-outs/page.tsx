@@ -88,7 +88,7 @@ export default async function ShoutOutsPage({
               <CardContent className="py-8 text-center">
                 <p className="font-medium">No shout-outs yet</p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Be the first to recognize a teammate.
+                  Be the first to recognise a teammate.
                 </p>
               </CardContent>
             </Card>
@@ -122,7 +122,7 @@ export default async function ShoutOutsPage({
             <Tooltip>
               <TooltipTrigger className="w-fit rounded-md text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
                 <CardTitle className="text-lg font-semibold tracking-tight">
-                  Recognize a teammate
+                  Recognise a teammate
                 </CardTitle>
               </TooltipTrigger>
               <TooltipContent side="top" align="start" className="max-w-72">

@@ -76,7 +76,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
             className={buttonVariants({ variant: 'outline', size: 'sm' })}
           >
             <ArrowLeft className="size-4" />
-            Back to organization
+            Back to organisation
           </Link>
         }
       />
@@ -103,7 +103,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
           {
             title: 'Skills to develop',
             description:
-              'Growth areas this organization member has identified.',
+              'Growth areas this organisation member has identified.',
             items: profile.skills_to_develop,
             emptyMessage: 'Nothing recorded yet.',
           },
@@ -119,7 +119,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
 
       <ProfileGrowthCard
         title="Growth direction"
-        description="Projects that should stretch this organization member in a good way."
+        description="Projects that should stretch this organisation member in a good way."
       >
         <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
           {profile.stretch_projects}
@@ -128,7 +128,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
 
       <ReceivedShoutOuts
         shoutOuts={shoutOuts as ReceivedShoutOut[]}
-        emptyMessage="No shout-outs yet for this organization member."
+        emptyMessage="No shout-outs yet for this organisation member."
         recipientId={profile.id}
         recipientName={profileName}
       />

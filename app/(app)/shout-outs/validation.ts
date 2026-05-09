@@ -38,7 +38,7 @@ export function validateShoutOutInput(
   if (recipientId === input.senderId) {
     return {
       ok: false,
-      error: 'Choose another team member to recognize.',
+      error: 'Choose another team member to recognise.',
     }
   }
 

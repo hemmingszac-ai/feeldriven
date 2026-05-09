@@ -29,7 +29,7 @@ export const skillOptions = [
   'Emotional intelligence',
   'Experiment design',
   'Facilitation',
-  'Financial modeling',
+  'Financial modelling',
   'Forecasting',
   'Growth strategy',
   'Influence',

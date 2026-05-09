@@ -39,7 +39,7 @@ const navItems: NavItem[] = [
   {
     id: 'organization',
     href: '/organization',
-    label: 'Organization',
+    label: 'Organisation',
     icon: UsersRound,
   },
   {

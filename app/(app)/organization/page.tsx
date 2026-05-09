@@ -59,9 +59,9 @@ export default async function OrganizationPage({ searchParams }: OrganizationPag
         <Card>
           <CardContent className="py-10 text-center">
             <UsersRound className="mx-auto size-9 text-muted-foreground" />
-            <p className="mt-3 font-medium">No organization profiles yet</p>
+            <p className="mt-3 font-medium">No organisation profiles yet</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Organization members will appear here after they complete profile setup.
+              Organisation members will appear here after they complete profile setup.
             </p>
           </CardContent>
         </Card>
@@ -69,14 +69,14 @@ export default async function OrganizationPage({ searchParams }: OrganizationPag
         <Card>
           <CardContent className="py-10 text-center">
             <Search className="mx-auto size-9 text-muted-foreground" />
-            <p className="mt-3 font-medium">No matching organization members</p>
+            <p className="mt-3 font-medium">No matching organisation members</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Try searching for another first or last name.
             </p>
           </CardContent>
         </Card>
       ) : (
-        <section className="grid gap-3" aria-label="Organization members">
+        <section className="grid gap-3" aria-label="Organisation members">
           {filteredProfiles.map((profile) => (
             <ProfileListCard
               key={profile.id}

@@ -80,7 +80,7 @@ export function ShoutOutCard({
 
           <div className="border-t pt-3 text-sm">
             <p className="font-medium">
-              Recognized by{' '}
+              Recognised by{' '}
               {senderHref ? (
                 <Link
                   href={senderHref}
