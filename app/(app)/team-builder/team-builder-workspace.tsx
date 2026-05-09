@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { useFormState } from 'react-dom'
 import { submitTeamBuilderInput } from './actions'
 import { TeamBuilderForm } from './team-builder-form'
@@ -10,9 +11,15 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardAction,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
 
 const initialState: TeamBuilderFormState = {
   status: 'idle',
@@ -98,6 +105,9 @@ function TeamBuilderWorkspaceContent({
   initialSelectedIds: string[]
 }) {
   const [state, formAction] = useFormState(submitTeamBuilderInput, initialFormState)
+  const [isFormOpen, setIsFormOpen] = useState(
+    initialFormState.status !== 'success',
+  )
   const [selectedIds, setSelectedIds] = useState<string[]>(() =>
     state.status === 'success'
       ? normalizeSelectedIds(state.output, initialSelectedIds)
@@ -151,6 +161,11 @@ function TeamBuilderWorkspaceContent({
           }
         : persistedSessionState
 
+  const activeDreamTeamSignature =
+    activeSessionState?.state.status === 'success'
+      ? getOutputSignature(activeSessionState.state.output)
+      : null
+
   useEffect(() => {
     if (activeSessionState?.state.status !== 'success') {
       return
@@ -159,20 +174,46 @@ function TeamBuilderWorkspaceContent({
     setPersistedSessionState(activeSessionState)
   }, [activeSessionState])
 
+  useEffect(() => {
+    if (activeDreamTeamSignature) {
+      setIsFormOpen(false)
+    }
+  }, [activeDreamTeamSignature])
+
   return (
     <div className="mx-auto w-full max-w-3xl">
-      <Card size="sm">
-        <CardHeader>
-          <CardTitle>Team Builder</CardTitle>
-          <CardDescription className="text-xs leading-relaxed">
-            Paste details for a new job and attach one supporting file to generate
-            an AI team recommendation.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <TeamBuilderForm state={state} formAction={formAction} />
-        </CardContent>
-      </Card>
+      <Collapsible open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <Card size="sm">
+          <CardHeader>
+            <div className="grid min-w-0 gap-1">
+              <CardTitle>Team Builder</CardTitle>
+              <CardDescription className="text-xs leading-relaxed">
+                Paste details for a new job and attach one supporting file to
+                generate an AI team recommendation.
+              </CardDescription>
+            </div>
+
+            <CardAction>
+              <CollapsibleTrigger
+                className="inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border/70 bg-background/80 text-muted-foreground transition hover:bg-accent hover:text-foreground"
+                aria-label={
+                  isFormOpen ? 'Collapse team builder form' : 'Expand team builder form'
+                }
+              >
+                <ChevronDown
+                  className={`size-4 transition-transform ${isFormOpen ? 'rotate-180' : ''}`}
+                />
+              </CollapsibleTrigger>
+            </CardAction>
+          </CardHeader>
+
+          <CollapsibleContent>
+            <CardContent>
+              <TeamBuilderForm state={state} formAction={formAction} />
+            </CardContent>
+          </CollapsibleContent>
+        </Card>
+      </Collapsible>
 
       {activeSessionState?.state.status === 'success' ? (
         <TeamScorecard

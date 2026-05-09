@@ -62,11 +62,6 @@ export function TeamBuilderForm({ state, formAction }: TeamBuilderFormProps) {
         />
       </div>
 
-      <div className="grid gap-1.5">
-        <Label htmlFor="attachments">Attachment (optional)</Label>
-        <Input id="attachments" name="attachments" type="file" />
-      </div>
-
       <SubmitButton />
     </form>
   )
