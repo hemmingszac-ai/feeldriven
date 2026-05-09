@@ -1,4 +1,3 @@
-import { Megaphone } from 'lucide-react'
 import { formatProfileName } from '@/app/lib/profiles'
 import { createShoutOut } from './actions'
 import { normalizeShoutOuts, type ShoutOutWithProfiles } from './feed'
@@ -6,10 +5,12 @@ import {
   ShoutOutCard,
   getShoutOutCardClassName,
 } from './shout-out-card'
+import { ShoutOutForm } from './shout-out-form'
+import { PostShoutOutButton } from './post-shout-out-button'
+import { ShoutOutConfetti } from './shout-out-confetti'
 import { SHOUT_OUT_MAX_MESSAGE_LENGTH } from './validation'
 import { getCurrentUserProfile } from '@/app/lib/auth/session'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -68,6 +69,8 @@ export default async function ShoutOutsPage({
 
   return (
     <div className="mx-auto flex h-[calc(100svh-5.5rem)] w-full max-w-6xl flex-col gap-3">
+      <ShoutOutConfetti />
+
       <section
         className="min-h-0 flex-1 overflow-y-auto pr-1"
         aria-label="Recent shout-outs"
@@ -111,7 +114,7 @@ export default async function ShoutOutsPage({
           <CardTitle>Recognize a teammate</CardTitle>
         </CardHeader>
         <CardContent>
-          <form action={createShoutOut} className="grid gap-3">
+          <ShoutOutForm action={createShoutOut}>
             {searchParams?.error ? (
               <Alert variant="destructive">
                 <AlertDescription>{searchParams.error}</AlertDescription>
@@ -151,15 +154,9 @@ export default async function ShoutOutsPage({
                 </select>
               </div>
 
-              <Button
-                type="submit"
-                className="w-fit md:col-start-2 md:row-start-2 md:w-full"
-              >
-                <Megaphone className="size-4" />
-                Post shout-out
-              </Button>
+              <PostShoutOutButton />
             </div>
-          </form>
+          </ShoutOutForm>
         </CardContent>
       </Card>
     </div>
