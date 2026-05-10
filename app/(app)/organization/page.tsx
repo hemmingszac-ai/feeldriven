@@ -82,7 +82,6 @@ export default async function OrganizationPage({ searchParams }: OrganizationPag
               key={profile.id}
               initials={getProfileInitials(profile)}
               title={getOrganizationProfileName(profile)}
-              description={`${profile.skills_to_develop.length} skills to develop`}
               action={
                 <Link
                   href={`/organization/${profile.id}`}
