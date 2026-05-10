@@ -6,7 +6,6 @@ import {
   ProfileDetailsGrid,
   ProfileGrowthCard,
   ProfileHero,
-  ProfileMetricsGrid,
 } from '@/components/profile-view'
 import {
   ReceivedShoutOuts,
@@ -18,8 +17,6 @@ export default async function ProfilePage() {
   const userEmail = profile.email ?? user.email ?? 'Email not set'
   const role = profile.role ?? 'Role not set'
   const isManager = getIsManager(user.user_metadata)
-  const skillCount = profile.skills_to_develop.length
-  const workModeCount = profile.enjoyable_work.length
 
   const { data: shoutOuts = [] } = await supabase
     .from('shout_outs')
@@ -63,26 +60,10 @@ export default async function ProfilePage() {
         }
       />
 
-      <ProfileMetricsGrid
-        metrics={[
-          {
-            icon: Brain,
-            title: 'Skills',
-            description: 'Development signals captured.',
-            value: skillCount,
-          },
-          {
-            icon: Sparkles,
-            title: 'Work modes',
-            description: 'Preferred contribution styles.',
-            value: workModeCount,
-          },
-        ]}
-      />
-
       <ProfileDetailsGrid
         sections={[
           {
+            icon: Brain,
             title: 'Skills to develop',
             description:
               'Growth areas we can use when shaping missions.',
@@ -90,6 +71,7 @@ export default async function ProfilePage() {
             emptyMessage: 'Nothing recorded yet.',
           },
           {
+            icon: Sparkles,
             title: 'Work you enjoy most',
             description:
               'The work patterns most likely to keep momentum high.',
