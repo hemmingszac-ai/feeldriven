@@ -13,7 +13,6 @@ import {
   ProfileDetailsGrid,
   ProfileGrowthCard,
   ProfileHero,
-  ProfileMetricsGrid,
 } from '@/components/profile-view'
 
 type OrganizationMemberPageProps = {
@@ -56,8 +55,6 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
 
   const profileName = getOrganizationProfileName(profile)
   const role = profile.role ?? 'Role not set'
-  const skillCount = profile.skills_to_develop.length
-  const workModeCount = profile.enjoyable_work.length
 
   return (
     <div className="grid gap-6">
@@ -81,26 +78,10 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
         }
       />
 
-      <ProfileMetricsGrid
-        metrics={[
-          {
-            icon: Brain,
-            title: 'Skills',
-            description: 'Development signals captured.',
-            value: skillCount,
-          },
-          {
-            icon: Sparkles,
-            title: 'Work modes',
-            description: 'Preferred contribution styles.',
-            value: workModeCount,
-          },
-        ]}
-      />
-
       <ProfileDetailsGrid
         sections={[
           {
+            icon: Brain,
             title: 'Skills to develop',
             description:
               'Growth areas this organisation member has identified.',
@@ -108,6 +89,7 @@ export default async function OrganizationMemberPage({ params }: OrganizationMem
             emptyMessage: 'Nothing recorded yet.',
           },
           {
+            icon: Sparkles,
             title: 'Work they enjoy most',
             description:
               'Work patterns that keep contribution energizing.',

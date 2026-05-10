@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import { Target } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { PillList } from '@/components/pill-list'
 import {
   Card,
@@ -21,10 +22,12 @@ type ProfileMetric = {
   icon: LucideIcon
   title: string
   description: string
-  value: ReactNode
+  content: ReactNode
+  contentClassName?: string
 }
 
 type ProfileSection = {
+  icon?: LucideIcon
   title: string
   description: string
   items: string[]
@@ -67,7 +70,7 @@ export function ProfileHero({
 export function ProfileMetricsGrid({ metrics }: { metrics: ProfileMetric[] }) {
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      {metrics.map(({ icon: Icon, title, description, value }) => (
+      {metrics.map(({ icon: Icon, title, description, content, contentClassName }) => (
         <Card key={title}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -76,8 +79,8 @@ export function ProfileMetricsGrid({ metrics }: { metrics: ProfileMetric[] }) {
             </CardTitle>
             <CardDescription>{description}</CardDescription>
           </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-semibold">{value}</p>
+          <CardContent className={cn('text-sm', contentClassName)}>
+            {content}
           </CardContent>
         </Card>
       ))}
@@ -88,10 +91,13 @@ export function ProfileMetricsGrid({ metrics }: { metrics: ProfileMetric[] }) {
 export function ProfileDetailsGrid({ sections }: { sections: ProfileSection[] }) {
   return (
     <div className="grid gap-4 lg:grid-cols-2">
-      {sections.map(({ title, description, items, emptyMessage }) => (
+      {sections.map(({ icon: Icon, title, description, items, emptyMessage }) => (
         <Card key={title}>
           <CardHeader>
-            <CardTitle>{title}</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              {Icon ? <Icon className="size-4" /> : null}
+              {title}
+            </CardTitle>
             <CardDescription>{description}</CardDescription>
           </CardHeader>
           <CardContent>
