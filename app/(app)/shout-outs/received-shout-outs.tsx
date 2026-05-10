@@ -21,6 +21,7 @@ type ReceivedShoutOutsProps = {
   emptyMessage: string
   recipientId: string
   recipientName: string
+  hideRecipientName?: boolean
 }
 
 export function ReceivedShoutOuts({
@@ -28,6 +29,7 @@ export function ReceivedShoutOuts({
   emptyMessage,
   recipientId,
   recipientName,
+  hideRecipientName = false,
 }: ReceivedShoutOutsProps) {
   return (
     <Card>
@@ -58,6 +60,7 @@ export function ReceivedShoutOuts({
                   message={shoutOut.message}
                   createdAt={shoutOut.created_at}
                   compact
+                  hideRecipient={hideRecipientName}
                   className={getShoutOutCardClassName(shoutOut.message)}
                 />
               )

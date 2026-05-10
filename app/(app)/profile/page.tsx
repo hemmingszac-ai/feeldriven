@@ -113,6 +113,7 @@ export default async function ProfilePage() {
         emptyMessage="No shout-outs yet. Recognition from teammates will appear here."
         recipientId={profile.id}
         recipientName={userName}
+        hideRecipientName
       />
     </div>
   )

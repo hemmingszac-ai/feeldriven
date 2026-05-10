@@ -11,6 +11,7 @@ export type ShoutOutCardProps = {
   createdAt: string
   className?: string
   compact?: boolean
+  hideRecipient?: boolean
 }
 
 function formatTimestamp(value: string) {
@@ -41,9 +42,46 @@ export function ShoutOutCard({
   createdAt,
   className,
   compact = false,
+  hideRecipient = false,
 }: ShoutOutCardProps) {
   const recipientHref = recipientId ? `/organization/${recipientId}` : null
   const senderHref = senderId ? `/organization/${senderId}` : null
+
+  if (hideRecipient) {
+    return (
+      <Card className={className}>
+        <CardContent className="flex h-full flex-col gap-4 p-4 text-sm">
+          <div className="flex flex-1 items-start gap-3">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-primary/10">
+              <Megaphone className="size-4" />
+            </div>
+            <p className="text-base font-medium leading-6 text-balance">
+              "{message}"
+            </p>
+          </div>
+
+          <div className="border-t pt-3 text-sm">
+            <p className="font-medium">
+              Recognised by{' '}
+              {senderHref ? (
+                <Link
+                  href={senderHref}
+                  className="font-medium text-primary underline-offset-4 transition hover:underline"
+                >
+                  {sender}
+                </Link>
+              ) : (
+                sender
+              )}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {formatTimestamp(createdAt)}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <Card className={className}>
