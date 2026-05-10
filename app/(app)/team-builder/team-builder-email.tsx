@@ -19,7 +19,7 @@ type TeamBuilderEmailProps = {
 function normalizeSubjectSummary(value?: string | null) {
   return value
     ?.trim()
-    .replace(/^(team huddle\s*-\s*|team assignment:\s*)/i, '')
+    .replace(/^(team hudd?l(?:e)?\s*-\s*|team assignment:\s*)/i, '')
     .trim()
 }
 
@@ -45,7 +45,7 @@ export function TeamBuilderEmail({
     output.projectTitle ||
     output.jobDescription.split('\n')[0]?.trim() ||
     'New mission'
-  const subject = `Team huddle - ${subjectSummary}`
+  const subject = `Team huddl - ${subjectSummary}`
   const mailtoHref = `mailto:${selectedEmails
     .map((email) => encodeURIComponent(email))
     .join(',')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`
@@ -79,7 +79,7 @@ export function TeamBuilderEmail({
           }}
         >
           <Mail className="size-4" />
-          Start Huddle
+          Start huddl
         </Button>
         {!canDraftEmail ? (
           <p className="text-sm text-muted-foreground">

@@ -23,7 +23,7 @@ const steps = [
   },
   {
     number: "IV",
-    title: "Send the Huddle",
+    title: "Send the huddl",
     description: "One click creates the kickoff email thread with everyone included — AI-written brief, project title, role expectations.",
     visibleCards: 4,
   },
@@ -142,9 +142,8 @@ export function HowItWorksSection() {
         {/* Header */}
         <div className="mb-16 lg:mb-24">
           <h2
-            className={`text-5xl font-semibold tracking-tight text-gray-900 transition-all duration-700 lg:text-7xl ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`text-5xl font-semibold tracking-tight text-gray-900 transition-all duration-700 lg:text-7xl ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
           >
             From brief to team
             <br />
@@ -161,9 +160,8 @@ export function HowItWorksSection() {
                 key={step.number}
                 type="button"
                 onClick={() => { setActiveStep(index); resetInterval(); }}
-                className={`w-full text-left py-8 border-b border-gray-100 transition-all duration-500 group ${
-                  activeStep === index ? "opacity-100" : "opacity-30 hover:opacity-60"
-                }`}
+                className={`w-full text-left py-8 border-b border-gray-100 transition-all duration-500 group ${activeStep === index ? "opacity-100" : "opacity-30 hover:opacity-60"
+                  }`}
               >
                 <div className="flex items-start gap-6">
                   <span className="text-3xl font-semibold text-gray-200">{step.number}</span>
@@ -242,7 +240,7 @@ export function HowItWorksSection() {
                   </div>
                 </div>
 
-                {/* Start Huddle button */}
+                {/* Start Huddl button */}
                 <div
                   className="flex justify-center transition-all duration-500"
                   style={{
@@ -252,7 +250,7 @@ export function HowItWorksSection() {
                   }}
                 >
                   <div className="huddl-btn px-6 py-2.5 rounded-full text-white text-sm font-semibold shadow-lg cursor-default select-none">
-                    ✉ Start Huddle
+                    ✉ Start huddl
                   </div>
                 </div>
               </div>
