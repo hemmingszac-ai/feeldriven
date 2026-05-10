@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { useFormState } from 'react-dom'
 import { submitTeamBuilderInput } from './actions'
@@ -25,7 +25,7 @@ const initialState: TeamBuilderFormState = {
   status: 'idle',
 }
 
-const TEAM_BUILDER_SESSION_KEY = 'team-builder-session-state-v3'
+const TEAM_BUILDER_SESSION_KEY = 'team-builder-session-state-v6'
 
 type TeamBuilderSessionState = {
   state: TeamBuilderFormState
@@ -86,6 +86,9 @@ function readTeamBuilderSessionState(): TeamBuilderSessionState | null {
       Array.isArray(parsed.selectedIds) &&
       parsed.state.output &&
       'managerProfileId' in parsed.state.output &&
+      Array.isArray(parsed.state.output.chemistryLinks) &&
+      parsed.state.output.ratings &&
+      Array.isArray(parsed.state.output.ratingCache) &&
       typeof parsed.state.output.selectionSummary === 'string'
     ) {
       return {
@@ -141,44 +144,72 @@ function TeamBuilderWorkspaceContent({
   const previousOutputSignature = useRef(
     state.status === 'success' ? getOutputSignature(state.output) : null,
   )
+  const previousFormState = useRef(state)
 
   useEffect(() => {
     if (state.status !== 'success') {
+      previousFormState.current = state
       return
     }
 
+    const isNewFormState = previousFormState.current !== state
+    previousFormState.current = state
     const nextSignature = getOutputSignature(state.output)
     const nextSelectedIds =
-      previousOutputSignature.current !== nextSignature
+      isNewFormState || previousOutputSignature.current !== nextSignature
         ? normalizeSelectedIds(state.output)
         : normalizeSelectedIds(state.output, selectedIds)
 
-    if (previousOutputSignature.current !== nextSignature) {
+    if (isNewFormState || previousOutputSignature.current !== nextSignature) {
       previousOutputSignature.current = nextSignature
       setSelectedIds(nextSelectedIds)
     }
 
-    const nextSessionState = {
-      state,
-      selectedIds: nextSelectedIds,
-    }
+    setPersistedSessionState((previousSessionState) => {
+      const nextState =
+        isNewFormState
+          ? state
+          : previousSessionState?.state.status === 'success' &&
+              getOutputSignature(previousSessionState.state.output) === nextSignature
+            ? previousSessionState.state
+            : state
+      const nextSessionState = {
+        state: nextState,
+        selectedIds: nextSelectedIds,
+      }
 
-    setPersistedSessionState(nextSessionState)
-    persistTeamBuilderSessionState(nextSessionState)
+      persistTeamBuilderSessionState(nextSessionState)
+      return nextSessionState
+    })
   }, [selectedIds, state])
 
+  const stateSignature =
+    state.status === 'success' ? getOutputSignature(state.output) : null
+  const persistedSignature =
+    persistedSessionState?.state.status === 'success'
+      ? getOutputSignature(persistedSessionState.state.output)
+      : null
   const activeSessionState =
-    state.status === 'success'
+    persistedSessionState?.state.status === 'success' &&
+    persistedSignature === stateSignature
       ? {
-          state,
-          selectedIds,
+          state: persistedSessionState.state,
+          selectedIds:
+            state.status === 'success'
+              ? selectedIds
+              : persistedSessionState.selectedIds,
         }
-      : persistedSessionState?.state.status === 'success'
+      : state.status === 'success'
         ? {
-            state: persistedSessionState.state,
-            selectedIds: persistedSessionState.selectedIds,
+            state,
+            selectedIds,
           }
-        : persistedSessionState
+        : persistedSessionState?.state.status === 'success'
+          ? {
+              state: persistedSessionState.state,
+              selectedIds: persistedSessionState.selectedIds,
+            }
+          : persistedSessionState
 
   const activeDreamTeamSignature =
     activeSessionState?.state.status === 'success'
@@ -198,6 +229,21 @@ function TeamBuilderWorkspaceContent({
   const activeSelectedIds = activeOutput
     ? normalizeSelectedIds(activeOutput, activeSessionState?.selectedIds)
     : []
+  const handleOutputUpdate = useCallback(
+    (nextOutput: TeamBuilderOutput) => {
+      const nextSessionState: TeamBuilderSessionState = {
+        state: {
+          status: 'success',
+          output: nextOutput,
+        },
+        selectedIds: normalizeSelectedIds(nextOutput, activeSelectedIds),
+      }
+
+      setPersistedSessionState(nextSessionState)
+      persistTeamBuilderSessionState(nextSessionState)
+    },
+    [activeSelectedIds],
+  )
 
   return (
     <div className="mx-auto w-full max-w-6xl">
@@ -239,6 +285,7 @@ function TeamBuilderWorkspaceContent({
           key={getOutputSignature(activeOutput)}
           output={activeOutput}
           selectedIds={activeSelectedIds}
+          onOutputUpdate={handleOutputUpdate}
           onSelectedIdsChange={(nextSelectedIds) => {
             setSelectedIds(
               normalizeSelectedIds(activeOutput, nextSelectedIds),

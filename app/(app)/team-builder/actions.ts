@@ -14,10 +14,12 @@ import {
 import { formatProfileName } from '@/app/lib/profiles'
 import { getIsManager } from '@/app/lib/user-metadata'
 import type {
+  TeamBuilderChemistryLink,
   TeamBuilderFormState,
   TeamBuilderOutput,
   TeamBuilderProfile,
 } from './types'
+import { canonicalProfileIds } from './rating-cache'
 
 const teamBuilderSchema = {
   type: 'object',
@@ -43,8 +45,35 @@ const teamBuilderSchema = {
       description:
         'A short email body that briefly describes the work, subtly nods to why this group is a good fit, and asks whether the recipients would be keen to help and share their thoughts.',
     },
+    ratings: {
+      type: 'object',
+      properties: {
+        overall: {
+          type: 'number',
+      description:
+            'FIFA Ultimate Team-style overall final team score out of 100, balancing skills, drive, and chemistry. Include the fixed manager profile from the form if supplied.',
+        },
+        skills: {
+          type: 'number',
+          description:
+            'Score out of 100 for how well the selected team skills cover the job needs.',
+        },
+        drive: {
+          type: 'number',
+          description:
+            'Score out of 100 for how motivated the selected team is likely to be for this type of work.',
+        },
+        chemistry: {
+          type: 'number',
+          description:
+            'Score out of 100 for how well the selected team is likely to work together, based on shout-out history and profile fit.',
+        },
+      },
+      required: ['overall', 'skills', 'drive', 'chemistry'],
+      additionalProperties: false,
+    },
   },
-  required: ['profileIds', 'subject', 'selectionSummary', 'emailBody'],
+  required: ['profileIds', 'subject', 'selectionSummary', 'emailBody', 'ratings'],
   additionalProperties: false,
 }
 
@@ -75,6 +104,60 @@ function normalizeProfile(value: {
     skillsToDevelop: value.skills_to_develop ?? [],
     enjoyableWork: value.enjoyable_work ?? [],
     stretchProjects: value.stretch_projects ?? '',
+  }
+}
+
+function getChemistryLinks(
+  shoutOuts: { sender_id: unknown; recipient_id: unknown }[],
+  validProfileIds: Set<string>,
+): TeamBuilderChemistryLink[] {
+  const counts = new Map<string, TeamBuilderChemistryLink>()
+
+  for (const shoutOut of shoutOuts) {
+    if (
+      typeof shoutOut.sender_id !== 'string' ||
+      typeof shoutOut.recipient_id !== 'string' ||
+      shoutOut.sender_id === shoutOut.recipient_id ||
+      !validProfileIds.has(shoutOut.sender_id) ||
+      !validProfileIds.has(shoutOut.recipient_id)
+    ) {
+      continue
+    }
+
+    const key = `${shoutOut.sender_id}:${shoutOut.recipient_id}`
+    const existing = counts.get(key)
+
+    if (existing) {
+      existing.count += 1
+      continue
+    }
+
+    counts.set(key, {
+      sourceProfileId: shoutOut.sender_id,
+      targetProfileId: shoutOut.recipient_id,
+      count: 1,
+    })
+  }
+
+  return [...counts.values()]
+}
+
+function normalizeRating(value: unknown) {
+  const numberValue = typeof value === 'number' ? value : Number(value)
+
+  if (!Number.isFinite(numberValue)) {
+    return 0
+  }
+
+  return Math.max(0, Math.min(100, Math.round(numberValue)))
+}
+
+function normalizeRatings(value: TeamBuilderOutput['ratings']) {
+  return {
+    overall: normalizeRating(value.overall),
+    skills: normalizeRating(value.skills),
+    drive: normalizeRating(value.drive),
+    chemistry: normalizeRating(value.chemistry),
   }
 }
 
@@ -160,6 +243,7 @@ export async function submitTeamBuilderInput(
         emailComms,
         projectTitle,
         jobDescription,
+        fixedManagerProfile: managerProfile ?? null,
         attachments: await readAttachments(formData),
       },
       schemaName: 'team_builder_recommendation',
@@ -167,9 +251,13 @@ export async function submitTeamBuilderInput(
     })
     const generatedOutput = result.output as Pick<
       TeamBuilderOutput,
-      'profileIds' | 'subject' | 'selectionSummary' | 'emailBody'
+      'profileIds' | 'subject' | 'selectionSummary' | 'emailBody' | 'ratings'
     >
     const validProfileIds = new Set(profiles.map((profile) => profile.id))
+    const chemistryLinks = getChemistryLinks(
+      database.shoutOuts,
+      validProfileIds,
+    )
     const recommendedProfileIds = Array.from(
       new Set(
         generatedOutput.profileIds.filter(
@@ -178,13 +266,26 @@ export async function submitTeamBuilderInput(
         ),
       ),
     )
+    const ratings = normalizeRatings(generatedOutput.ratings)
+    const initialRatingProfileIds = canonicalProfileIds([
+      ...(managerProfileId ? [managerProfileId] : []),
+      ...recommendedProfileIds,
+    ])
 
     return {
       status: 'success',
       output: {
         ...generatedOutput,
+        ratings,
+        ratingCache: [
+          {
+            profileIds: initialRatingProfileIds,
+            ratings,
+          },
+        ],
         profileIds: recommendedProfileIds,
         managerProfileId,
+        chemistryLinks,
         profiles,
         projectTitle,
         jobDescription,
